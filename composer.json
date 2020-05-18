@@ -1,0 +1,5 @@
+{
+    "require": {
+        "helpscout/api": "^2.0"
+    }
+}
