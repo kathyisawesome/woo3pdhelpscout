@@ -36,6 +36,7 @@ class Woo3pd_Helpscout_Webhook_Handler {
 	public static function validate_webhook() {
 
 		$appSecretKey = Woo3pd_Helpscout::get_setting( 'appSecretKey' );
+		$eventType    = '';
 	
 		try {
 
@@ -48,14 +49,19 @@ class Woo3pd_Helpscout_Webhook_Handler {
 		
 			//$webhook   = IncomingWebhook::makeFromGlobals( $appSecretKey );	
 			//$eventType = $webhook->getEventType();
-		    //$obj       = $webhook->getDataObject();
+			//$obj       = $webhook->getDataObject();
+			//
+		} catch (\HelpScout\Api\Exception\InvalidSignatureException $e) {
+			wp_die( 'Helpscout Webhook Failure', 'Helpscout Webhook', array( 'response' => 500 ) );
+			// Add log here
+		} finally {
 			
-			do_action( 'woo3pd_helpscout_valid_webhook_' . $eventType, $obj );
+			if( $eventType ) {
+				do_action( 'woo3pd_helpscout_valid_webhook_' . $eventType, $obj );
+			}
 			exit;
 		
-		} catch (\Exception $e) {
-			wp_die( 'Helpscout Webhook Failure', 'Helpscout Webhook', array( 'response' => 500 ) );
-		}
+		} 
 		
 	}
 
