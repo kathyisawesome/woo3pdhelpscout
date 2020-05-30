@@ -101,20 +101,28 @@ class Woo3pd_Helpscout_Webhook_Handler {
 
 		try {
 
-			// todo: pass the webhook object
-			// $webhook->getConversation();
 			// Authenticate with API.
 			$client = self::getClient( $retry );
 
-			$convo_id = $obj->id;
-			$folder_id = $obj->folderId;
+			// todo: pass the webhook object
+			// $conversation = $webhook->getConversation();
+			// $conversationId = $conversation->getId(); /* ?? */
+			// $mailboxId = $conversation->getMailboxId();	
+			//	$threads = $client->threads()->list($conversationId);
+	      	//  $firstThread   = $threads[0];
+	      	//	$threadId      = $firstThread->getId();
+	      	//	$html = $firstThread->getText();
+      				
+			$mailboxId      = $webhook->mailboxId;
+			$conversationId = $webhook->id;
+			$folder_id      = $webhook->folderId;
 
-			$threads = $obj->_embedded->threads;
-			$first_thread = $threads[0];
-			$thread_id = $first_thread->id;
-
-			$html = $first_thread->body;
-
+      		// Thread info from the webhook.
+      		$threads     = $webhook->_embedded->threads;
+			$firstThread = $threads[0];
+			$threadId    = $firstThread->id;
+			$html        = $firstThread->body;
+	
 			if ( ! $html ) {
 				//$error = new HelpScoutControllerApiV2Error( 'rest_invalid_message', 'Could not parse message.' );
 				//Log::error( $error->get_error_data() );
