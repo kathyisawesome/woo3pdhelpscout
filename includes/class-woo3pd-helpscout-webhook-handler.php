@@ -139,31 +139,21 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			// need to signal some kind of end/success?
 
 
-		} catch ( \Exception $e) {
-			$class = get_class( $e );
-			var_dump($class);
 
-			switch( $class ) {
-				case 'HelpScout\Api\Exception\AuthenticationException':
-					var_dump('auth error');
 
-					// Retry one time.
-					if ( ! $retry ) {
-						self::new_conversation( $obj, true );
 					}
-					break;
-				case 'HelpScout\Api\Exception\ValidationErrorException':
-					
-					echo '<pre>';
-					var_dump( $e->getError() );
-					echo '</pre>';
 
-					break;
 
-				default:
-					var_dump($e->getMessage());
 			}
 
+		} catch ( \HelpScout\Api\Exception\AuthenticationException $e) {
+
+			// Retry one time.
+			if ( ! $retry ) {
+				self::new_conversation( $webhook, true );
+			} else {
+			// We've retried this and it's still not working... @todo log an error
+			}
 
 		}
 
