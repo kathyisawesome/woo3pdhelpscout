@@ -55,6 +55,18 @@ class Woo3pd_Helpscout {
 	protected static $settings = array();
 
 	/**
+	 * Plugin default settings.
+	 *
+	 * @var array the DB settings for plugin.
+	 */
+	protected static $defaultSettings = array( 
+				'appId'         => '',
+				'appSecret'     => '',
+				'appSecretKey'  => '',
+				'accessToken'   => '',
+				'refreshToken'  => '',
+			);
+	/**
 	 * The Helpscout Webhook app ID.
 	 *
 	 * @var string app ID.
@@ -319,24 +331,15 @@ class Woo3pd_Helpscout {
 	public static function get_setting( $setting = '' ) {
 
 		if( empty( self::$settings ) ) {
-
-			$defaults = array( 
-				'appId'         => '',
-				'appSecret'     => '',
-				'appSecretKey'  => '',
-				'authToken'     => '',
-				'refreshToken'  => '',
-			);
-
 			$settings = get_option( 'woo3pd_helpscout' );
-
-			self::$settings = wp_parse_args( $settings, $defaults );
-
+			self::$settings = wp_parse_args( $settings, self::$defaultSettings );
 		}
 
 		return isset( self::$settings[$setting] ) ? self::$settings[$setting] : false;
 
 	}
+
+
 
 	/**
 	 * Plugin Path.
