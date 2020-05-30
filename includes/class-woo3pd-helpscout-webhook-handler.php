@@ -18,6 +18,11 @@ use HelpScout\Api\Webhooks\IncomingWebhook;
 class Woo3pd_Helpscout_Webhook_Handler {
 
 	/**
+	 * @var obj HelpScout\Api\ApiClient
+	 */
+	private static $client;
+
+	/**
 	 * Pseudo constructor.
 	 */
 	public static function init( $sandbox = false, $receiver_email = '' ) {
@@ -56,17 +61,28 @@ class Woo3pd_Helpscout_Webhook_Handler {
 
 
 	/**
-	 * Manpiulate the new conversation.
-	 *
-	 * @param  obj $obj Data object from webhook.
+	 * Authenticate with the Helpscout API.
 	 */
-	public static function authenticate( $obj ) {
+	public static function getClient( $refresh = false ) {
 
 		$appId        = Woo3pd_Helpscout::get_setting( 'appId' );
 		$appSecret    = Woo3pd_Helpscout::get_setting( 'appSecret' );
-		$authToken    = Woo3pd_Helpscout::get_setting( 'authToken' );
+		$accessToken  = Woo3pd_Helpscout::get_setting( 'accessToken' );
 		$refreshToken = Woo3pd_Helpscout::get_setting( 'refreshToken' );
 
+		// Initialize API Client 
+	    self::$client = ApiClientFactory::createClient();
+		self::$client = self::$client->useClientCredentials($appId, $appSecret);
+	
+		if ( $accessToken && ! $refresh ) {	
+			self::$client->setAccessToken( $accessToken );
+		} else {
+			self::$client->getAuthenticator()->fetchAccessAndRefreshToken();
+			$accessToken = self::$client->getAuthenticator()->fetchAccessAndRefreshToken()->accessToken();
+			Woo3pd_Helpscout::set_settings( array( 'accessToken' => $accessToken ) );
+		}
+
+		return self::$client;
 
 	}
 
@@ -76,12 +92,14 @@ class Woo3pd_Helpscout_Webhook_Handler {
 	 *
 	 * @param  obj $obj Data object from webhook.
 	 */
-	public static function new_conversation( $obj ) {
+	public static function new_conversation( $obj, $retry = false ) {
 
 		try {
 
 			// todo: pass the webhook object
 			// $webhook->getConversation();
+			// Authenticate with API.
+			$client = self::getClient( $retry );
 
 			$convo_id = $obj->id;
 			$folder_id = $obj->folderId;
@@ -105,8 +123,35 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			print_r($ticket_data);
 			echo '</pre>';
 
-		} catch (\Exception $e) {
-			print_r($e->getMessage());
+			// need to signal some kind of end/success?
+
+
+		} catch ( \Exception $e) {
+			$class = get_class( $e );
+			var_dump($class);
+
+			switch( $class ) {
+				case 'HelpScout\Api\Exception\AuthenticationException':
+					var_dump('auth error');
+
+					// Retry one time.
+					if ( ! $retry ) {
+						self::new_conversation( $obj, true );
+					}
+					break;
+				case 'HelpScout\Api\Exception\ValidationErrorException':
+					
+					echo '<pre>';
+					var_dump( $e->getError() );
+					echo '</pre>';
+
+					break;
+
+				default:
+					var_dump($e->getMessage());
+			}
+
+
 		}
 
 	}
