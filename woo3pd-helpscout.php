@@ -339,7 +339,24 @@ class Woo3pd_Helpscout {
 
 	}
 
+	/**
+	 * Update a setting in the DB.
+	 *
+	 * @param array key => value
+	 */
+	public static function set_settings( $settings = array() ) {
 
+		$result = false;
+
+		if ( ! empty( $settings ) && is_array( $settings ) ) {
+			$new_settings = array_intersect_key( $settings, self::$settings );
+			self::$settings = array_merge( get_option( 'woo3pd_helpscout', array() ), $new_settings );
+			$result = update_option( 'woo3pd_helpscout', self::$settings );
+		}
+
+		return $result;
+
+	}
 
 	/**
 	 * Plugin Path.
