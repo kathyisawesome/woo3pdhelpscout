@@ -176,9 +176,15 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			//$this->handle_error( $error, $request );
 			//return new Response( $error->get_error_data(), 400 );
 		}
+		
+		$status = '';
+		if ( preg_match( '/(.*)<dd id="site-status-report"(.*?)>(.*?)<\/dd>(.*)/s', $html, $html_matches ) ) {
+			$html   = $html_matches[ 1 ] . '<dd id="site-status-report"></dd>' . $html_matches[ 4 ];
+			$status = $html_matches[ 3 ];
+		}
 
 		$product_name_node         = $html_document->getElementById( 'product-name' );
-		$customer_html_node        = $html_document->getElementById( 'customer-email' );
+		$customer_email_node       = $html_document->getElementById( 'customer-email' );
 		$customer_name_node        = $html_document->getElementById( 'customer-name' );
 		$website_node              = $html_document->getElementById( 'ticket-web-site' );
 		$subject_node              = $html_document->getElementById( 'ticket-subject' );
@@ -189,19 +195,43 @@ class Woo3pd_Helpscout_Webhook_Handler {
 
 		$ticket_data = array(
 			'product_name'         => $product_name_node ? $product_name_node->textContent : '',
-			'customer_email'       => $customer_html_node ? $customer_html_node->textContent : '',
-			'customer_name'        => $customer_name_node ? $customer_name_node->textContent : '',
+			'product_tag'          => $product_name_node ? self::sanitize_product_name( $product_name_node->textContent ) : '',
+			'customer'             => array( 
+										'full_name'  => $customer_name_node ? $customer_name_node->textContent : '',
+										'first_name' => '',
+										'last_name'  => '',
+										'email'      => $customer_email_node ? $customer_email_node->textContent : '',
+										),
 			'subscription_started' => $subscription_started_node ? $subscription_started_node->textContent : '',
 			'subscription_ends'    => $subscription_ends_node ? $subscription_ends_node->textContent : '',
-			'website'              => $website_node ? $website_node->textContent : '',
+			'website'              => $website_node ? esc_url_raw( $website_node->textContent ) : '',
 			'subject'              => $subject_node ? $subject_node->textContent : '',
 			'description'          => $description_node ? str_replace( array( '<dd id="ticket-description" style="padding-bottom: 1em;">', '</dd>' ), '', $html_document->saveHTML( $description_node ) ) : 'Failed to parse ticket Description!',
-			'status'               => $site_status_node ? trim( str_replace( array( '<pre class="">`', '<pre>`', '`</pre>', '<pre>', '</pre>' ), '', $html_document->saveHTML( $site_status_node ) ) ) : '',
+			'status'               => $site_status_node ? trim( str_replace( '`', '', strip_tags( $html_document->saveHTML( $site_status_node ), '<br>' ) ) ) : '',
 		);
 
-		if ( empty( $ticket_data[ 'customer_name' ] ) ) {
-			$ticket_data[ 'customer_name' ] = 'Undefined';
+		// Stash full name as it's own key for custom fields.
+		$ticket_data[ 'customer_name' ] = $ticket_data[ 'customer' ][ 'full_name' ];
+
+		if ( empty( $ticket_data[ 'customer'][ 'full_name' ] ) ) {
+			$ticket_data[ 'customer' ][ 'full_name' ] = 'Undefined';
 		}
+	
+		$name = explode( ' ', $ticket_data[ 'customer' ][ 'full_name' ] );
+		if ( 2 === sizeof( $name ) ) {
+			$ticket_data['customer'][ 'first_name' ] = $name[ 0 ];
+			$ticket_data['customer'][ 'last_name' ]  = $name[ 1 ];
+		}
+
+		// WooCommerce plugin version.
+	    if ( preg_match( '/WC Version: (\S+(?=<br>))/i', $ticket_data[ 'status' ], $wc_version_matches ) ) {
+            $ticket_data['wc_version'] = strip_tags($wc_version_matches[ 1 ]);
+        }
+
+        // PHP version.
+        if ( preg_match( '/PHP Version: ([\d\.]+)/i', $ticket_data[ 'status' ], $php_version_matches ) ) {
+            $ticket_data['php_version'] = strip_tags($php_version_matches[ 1 ]);
+        }
 
 		//$ticket_data_validation_result = self::validate_parsed_data( $ticket_data );
 		
@@ -215,7 +245,19 @@ class Woo3pd_Helpscout_Webhook_Handler {
 
 	}
 
-
+	/**
+	 * Makes all letters lowercase and replaces whitespaces with dashes.
+	 *
+	 * @param  string  $product_name
+	 * @return string  $product_name
+	 */
+	private static function sanitize_product_name( $product_name ) {
+		$product_name = strtolower( $product_name );
+		$product_name = preg_replace( "/[\s_]/", "-", $product_name );
+		$product_name = str_replace( 'woocommerce-', '', $product_name );
+		return $product_name;
+	}
+	
 	/**
 	 * Validate successful parsing of ticket data.
 	 *
