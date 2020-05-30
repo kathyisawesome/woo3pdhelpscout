@@ -25,7 +25,7 @@ class Woo3pd_Helpscout_Webhook_Handler {
 	/**
 	 * Pseudo constructor.
 	 */
-	public static function init( $sandbox = false, $receiver_email = '' ) {
+	public static function init() {
 		add_action( 'woo3pd_api_helpscout', array( __CLASS__, 'validate_webhook' ) );
 		add_action( 'woo3pd_helpscout_valid_webhook_convo.created', array( __CLASS__, 'new_conversation' ) );
 	}
