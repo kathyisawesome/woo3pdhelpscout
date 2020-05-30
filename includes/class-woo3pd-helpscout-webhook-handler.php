@@ -185,7 +185,6 @@ class Woo3pd_Helpscout_Webhook_Handler {
 				$client->conversations()->updateTags( $conversationId, array( $ticket_data['product_tag'] ) );
 			}
 
-			// need to signal some kind of end/success?
 			/**
 			 * Custom Fields
 			 */	
@@ -214,6 +213,12 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			if ( ! empty( $newCustomFields ) ) {
 				$client->conversations()->updateCustomFields( $conversationId, $newCustomFields );
 			}
+
+			/**
+			 * Since we can't remove a thread, reduce orginal thread to a time notice of when it was parsed.
+			 */
+			$updatedText = sprintf( esc_html__( 'Processed by webhook on %s', 'woo3pd' ), current_time( get_option( 'date_format' ) ) );
+			$client->threads()->updateText( $conversationId, $threadId, $updatedText );
 
 		} catch ( \HelpScout\Api\Exception\AuthenticationException $e) {
 
