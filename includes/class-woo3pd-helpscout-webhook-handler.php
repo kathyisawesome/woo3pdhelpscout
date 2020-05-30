@@ -44,7 +44,7 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			$json = file_get_contents( __DIR__ . '/webhook-payload.json');
 
 			//Decode JSON
-			$obj = json_decode( $json );
+			$webhook = json_decode( $json );
 			$eventType = 'convo.created';
 		
 			//$webhook   = IncomingWebhook::makeFromGlobals( $appSecretKey );	
@@ -57,7 +57,7 @@ class Woo3pd_Helpscout_Webhook_Handler {
 		} finally {
 			
 			if( $eventType ) {
-				do_action( 'woo3pd_helpscout_valid_webhook_' . $eventType, $obj );
+				do_action( 'woo3pd_helpscout_valid_webhook_' . $eventType, $webhook );
 			}
 			exit;
 		
@@ -92,13 +92,12 @@ class Woo3pd_Helpscout_Webhook_Handler {
 
 	}
 
-
 	/**
 	 * Manpiulate the new conversation.
 	 *
-	 * @param  obj $obj Data object from webhook.
+	 * @param  obj $webhook \Helpscout\API\Webhook
 	 */
-	public static function new_conversation( $obj, $retry = false ) {
+	public static function new_conversation( $webhook, $retry = false ) {
 
 		try {
 
