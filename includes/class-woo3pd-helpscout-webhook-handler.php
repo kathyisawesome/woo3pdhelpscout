@@ -287,6 +287,7 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			'status'               => $site_status_node ? trim( str_replace( '`', '', strip_tags( $html_document->saveHTML( $site_status_node ), '<br>' ) ) ) : '',
 			'wc_version'           => '',
 			'php_version'          => '',
+			'version'              => '',
 		);
 
 		// Stash full name as it's own key for custom fields.
@@ -311,6 +312,11 @@ class Woo3pd_Helpscout_Webhook_Handler {
         if ( preg_match( '/PHP Version: ([A-Za-z0-9\.\-]+)/i', $ticket_data[ 'status' ], $php_version_matches ) ) {
             $ticket_data['php_version'] = strip_tags($php_version_matches[ 1 ]);
         }
+
+        // Plugin version.
+        if ( preg_match( '/' . $ticket_data[ 'product_name' ] . ': (.+?) - ([A-Za-z0-9\.\-]+)/i', $ticket_data[ 'status' ], $plugin_version_matches ) ) {
+			$ticket_data['version'] = $plugin_version_matches[ 2 ];
+		}
 
 		//$ticket_data_validation_result = self::validate_parsed_data( $ticket_data );
 		
