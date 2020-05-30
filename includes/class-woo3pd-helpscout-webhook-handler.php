@@ -159,6 +159,12 @@ class Woo3pd_Helpscout_Webhook_Handler {
 
             $client->threads()->create($conversationId, $noteThread);
 
+        	/**
+			 * Tags
+			 */
+			if ( ! empty( $ticket_data['product_tag'] ) ) {
+				$client->conversations()->updateTags( $conversationId, array( $ticket_data['product_tag'] ) );
+			}
 
 			// need to signal some kind of end/success?
 
