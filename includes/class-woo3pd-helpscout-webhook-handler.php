@@ -374,15 +374,28 @@ class Woo3pd_Helpscout_Webhook_Handler {
 	 * @return array
 	 */
 	private static function get_translated_custom_fields() {
-		return array(
-			'customer_name'        => __( 'Customer Name', 'woo3pd_helpscout' ),
-			'website'              => __( 'Website', 'woo3pd_helpscout' ),
-			'subscription_started' => __( 'Subscription Started', 'woo3pd_helpscout' ),
-			'subscription_ends'    => __( 'Subscription Ends', 'woo3pd_helpscout' ),
-			'wc_version'           => __( 'WC Version', 'woo3pd_helpscout' ),
-			'version'              => __( 'Version', 'woo3pd_helpscout' ),
-			'php_version'          => __( 'PHP Version', 'woo3pd_helpscout' ),
-		);
+
+		$locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
+
+		$fields = get_transient( 'woo3pd_helpscout_translated_custom_fields-' . $locale );
+
+		if ( false === $fields ) {
+
+			$fields = array(
+				'customer_name'        => __( 'Customer Name', 'woo3pd_helpscout' ),
+				'website'              => __( 'Website', 'woo3pd_helpscout' ),
+				'subscription_started' => __( 'Subscription Started', 'woo3pd_helpscout' ),
+				'subscription_ends'    => __( 'Subscription Ends', 'woo3pd_helpscout' ),
+				'wc_version'           => __( 'WC Version', 'woo3pd_helpscout' ),
+				'version'              => __( 'Version', 'woo3pd_helpscout' ),
+				'php_version'          => __( 'PHP Version', 'woo3pd_helpscout' ),
+			);
+
+			set_transient( 'woo3pd_helpscout_translated_custom_fields-' . $locale, $fields, 24 * HOUR_IN_SECONDS );
+
+		}
+
+		return $fields;
 	}
 
 }
