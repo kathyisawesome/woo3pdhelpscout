@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use HelpScout\Api\ApiClientFactory;
 use HelpScout\Api\Webhooks\IncomingWebhook;
+use HelpScout\Api\Conversations\Threads\NoteThread;
+use HelpScout\Api\Conversations\Threads\CustomerThread;
+use HelpScout\Api\Customers\Customer;
 
 /**
  * Woo3pd_Helpscout_Webhook_Handler class.
@@ -129,12 +132,33 @@ class Woo3pd_Helpscout_Webhook_Handler {
 				//$this->handle_error( $error, $request );
 				//return new Response( $error->get_error_data(), 400 );
 			}
-
+			
 			$ticket_data = self::parse_woo_email( $html );
 
-			echo '<pre>';
-			print_r($ticket_data);
-			echo '</pre>';
+            /**
+             * Create Customer
+             */
+            $customer = new Customer();
+            $customer->setFirstName($ticket_data['customer']['first_name']);
+            $customer->setLastName($ticket_data['customer']['last_name']);
+            $customer->addEmail($ticket_data['customer']['email'], 'work');
+
+			/**
+			 * Threads
+			 */	
+			// System status as note.
+	        $noteThread = new NoteThread();
+            $noteThread->setText( '<pre>' . $ticket_data[ 'status' ] . '</pre>' );
+
+            $client->threads()->create($conversationId, $noteThread);
+
+            // Clients question to separate thread.            
+            $customerThread = new CustomerThread();
+            $customerThread->setCustomer($customer);
+            $customerThread->setText( $ticket_data[ 'description' ] );
+
+            $client->threads()->create($conversationId, $noteThread);
+
 
 			// need to signal some kind of end/success?
 
