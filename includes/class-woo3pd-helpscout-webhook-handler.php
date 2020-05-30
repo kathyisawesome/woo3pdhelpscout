@@ -286,6 +286,7 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			'description'          => $description_node ? str_replace( array( '<dd id="ticket-description" style="padding-bottom: 1em;">', '</dd>' ), '', $html_document->saveHTML( $description_node ) ) : 'Failed to parse ticket Description!',
 			'status'               => $site_status_node ? trim( str_replace( '`', '', strip_tags( $html_document->saveHTML( $site_status_node ), '<br>' ) ) ) : '',
 			'wc_version'           => '',
+			'php_version'          => '',
 		);
 
 		// Stash full name as it's own key for custom fields.
@@ -307,7 +308,7 @@ class Woo3pd_Helpscout_Webhook_Handler {
         }
 
         // PHP version.
-        if ( preg_match( '/PHP Version: ([\d\.]+)/i', $ticket_data[ 'status' ], $php_version_matches ) ) {
+        if ( preg_match( '/PHP Version: ([A-Za-z0-9\.\-]+)/i', $ticket_data[ 'status' ], $php_version_matches ) ) {
             $ticket_data['php_version'] = strip_tags($php_version_matches[ 1 ]);
         }
 
