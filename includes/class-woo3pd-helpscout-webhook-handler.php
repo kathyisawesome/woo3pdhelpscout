@@ -11,14 +11,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use HelpScout\Api\ApiClientFactory;
 use HelpScout\Api\Webhooks\IncomingWebhook;
+use HelpScout\Api\Mailboxes\MailboxRequest;
+use HelpScout\Api\Conversations\CustomField;
 use HelpScout\Api\Conversations\Threads\NoteThread;
 use HelpScout\Api\Conversations\Threads\CustomerThread;
 use HelpScout\Api\Customers\Customer;
+
 
 /**
  * Woo3pd_Helpscout_Webhook_Handler class.
  */
 class Woo3pd_Helpscout_Webhook_Handler {
+
+	/**
+	 * The data parsed fom the Woo email.
+	 * The translated values need to match the custom fields set up in HelpScout.
+	 * 
+	 * @var array
+	 */
+	public static $customFields = array (
+		'customer_name' => '',
+		'website' => '',
+		'subscription_started' => '',
+		'subscription_ends' => '',
+		'wc_version' => '',
+		'plugin_version' => '',
+		'php_version' => '',
+	);
 
 	/**
 	 * @var obj HelpScout\Api\ApiClient
@@ -167,13 +186,33 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			}
 
 			// need to signal some kind of end/success?
+			/**
+			 * Custom Fields
+			 */	
+			$mailboxRequest = new MailboxRequest( array( 'fields' ) );
+			$mailbox = self::$client->mailboxes()->get( $mailboxId, $mailboxRequest );
+			$mailboxFields = $mailbox->getFields();
 
+			if ( ! empty( $mailboxFields ) && ! empty( self::get_translated_custom_fields() ) ) { 
 
+				$newCustomFields = array();
 
+				foreach( $mailboxFields as $field ) {
 
+					$key = array_search( $field->getName(), self::get_translated_custom_fields() );
+
+					if ( false !== $key && isset( $ticket_data[$key] ) ) {
+						$newCustomField = new CustomField();
+						$newCustomField->setId( $field->getId() );
+						$newCustomField->setValue( $ticket_data[$key] );
+						$newCustomFields[] = $newCustomField;
 					}
 
+				}
+			}
 
+			if ( ! empty( $newCustomFields ) ) {
+				$client->conversations()->updateCustomFields( $conversationId, $newCustomFields );
 			}
 
 		} catch ( \HelpScout\Api\Exception\AuthenticationException $e) {
@@ -313,6 +352,24 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			return $error_content;
 		}
 		return true;
+	}
+
+
+	/**
+	 * Get custom fields translated.
+	 *
+	 * @return array
+	 */
+	private static function get_translated_custom_fields() {
+		return array(
+			'customer_name'        => __( 'Customer Name', 'woo3pd_helpscout' ),
+			'website'              => __( 'Website', 'woo3pd_helpscout' ),
+			'subscription_started' => __( 'Subscription Started', 'woo3pd_helpscout' ),
+			'subscription_ends'    => __( 'Subscription Ends', 'woo3pd_helpscout' ),
+			'wc_version'           => __( 'WC Version', 'woo3pd_helpscout' ),
+			'version'              => __( 'Version', 'woo3pd_helpscout' ),
+			'php_version'          => __( 'PHP Version', 'woo3pd_helpscout' ),
+		);
 	}
 
 }
