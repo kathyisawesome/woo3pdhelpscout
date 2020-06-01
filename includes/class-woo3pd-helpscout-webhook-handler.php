@@ -248,10 +248,6 @@ class Woo3pd_Helpscout_Webhook_Handler {
 
 		if ( ! $html_loaded ) {
 			throw new Exception( 'Could not parse message content' );
-			//$error = new HelpScoutControllerApiV2Error( 'rest_invalid_message_content', 'Could not parse message content.' );
-			//Log::error( $error->get_error_data() );
-			//$this->handle_error( $error, $request );
-			//return new Response( $error->get_error_data(), 400 );
 		}
 		
 		$status = '';
@@ -318,13 +314,7 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			$ticket_data['version'] = $plugin_version_matches[ 2 ];
 		}
 
-		//$ticket_data_validation_result = self::validate_parsed_data( $ticket_data );
-		
-		//if ( $this->is_error( $ticket_data_validation_result ) ) {
-		//	Log::error( $ticket_data_validation_result->get_error_data() );
-		//	$this->handle_error( $ticket_data_validation_result, $request );
-		//	return new Response( $ticket_data_validation_result->get_error_data(), 400 );
-		//}
+		self::validate_parsed_data( $ticket_data );
 
 		return $ticket_data;
 
@@ -347,7 +337,7 @@ class Woo3pd_Helpscout_Webhook_Handler {
 	 * Validate successful parsing of ticket data.
 	 *
 	 * @param  array  $parsed_data
-	 * @return boolean|HelpScoutControllerApiV2Error
+	 * @return boolean
 	 */
 	private static function validate_parsed_data( $parsed_data ) {
 		$errors = array();
@@ -361,8 +351,7 @@ class Woo3pd_Helpscout_Webhook_Handler {
 			$errors[] = 'Failed to parse Subject field.';
 		}
 		if ( ! empty( $errors ) ) {
-			$error_content = new HelpScoutControllerApiV2Error( 'rest_ticket_data_parse_failure', 'Failed to parse ticket data.', $errors );
-			return $error_content;
+			throw Exception( 'Failed to parse ticket data: ' . join( ' ', $errors ) );
 		}
 		return true;
 	}
