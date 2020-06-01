@@ -48,42 +48,64 @@ class Woo3pd_Helpscout_Webhook_Handler {
 	 * Pseudo constructor.
 	 */
 	public static function init() {
-		add_action( 'woo3pd_api_helpscout', array( __CLASS__, 'validate_webhook' ) );
+		add_action( 'woo3pd_api_helpscout', array( __CLASS__, 'process_webhook' ) );
 		add_action( 'woo3pd_helpscout_valid_webhook_convo.created', array( __CLASS__, 'new_conversation' ) );
 	}
 
 	/**
 	 * Check for Webhook Response.
 	 */
-	public static function validate_webhook() {
+	public static function process_webhook() {
 
 		$appSecretKey = Woo3pd_Helpscout::get_setting( 'appSecretKey' );
-		$eventType    = '';
-	
-		try {
+		$attempts = 0;
 
-			// Read JSON file
-			$json = file_get_contents( __DIR__ . '/webhook-payload.json');
+		while ( $attempts < 1 ) {
 
-			//Decode JSON
-			$webhook = json_decode( $json );
-			$eventType = 'convo.created';
-		
-			//$webhook   = IncomingWebhook::makeFromGlobals( $appSecretKey );	
-			//$eventType = $webhook->getEventType();
-			//$obj       = $webhook->getDataObject();
-			//
-		} catch (\HelpScout\Api\Exception\InvalidSignatureException $e) {
-			wp_die( 'Helpscout Webhook Failure', 'Helpscout Webhook', array( 'response' => 500 ) );
-			// Add log here
-		} finally {
+			try {
 			
-			if( $eventType ) {
+				$webhook   = IncomingWebhook::makeFromGlobals( $appSecretKey );	
+				$eventType = $webhook->getEventType();
+
 				do_action( 'woo3pd_helpscout_valid_webhook_' . $eventType, $webhook );
+				exit;
+			} catch ( \Exception $e) {
+
+				// Handle different types of exceptions.
+				$class = get_class($e);
+
+				Woo3pd_Helpscout::log( $class, 'debug' );
+
+				switch ( $class ) {
+					case 'HelpScout\Api\Exception\AuthenticationException':
+
+						// Attempt to refresh the token.
+						self::refreshToken();
+
+						// We've retried this and it's still not working.
+						if ( 2 === $attempts ) {
+							Woo3pd_Helpscout::log( 'Helpscout API authentication error.', 'error' );
+						}
+
+						break;
+
+					default:
+						$attempts++; // For every other kind of error we want to skip the re-attempt.
+						
+						Woo3pd_Helpscout::log( $message, 'error' );
+
+						if ( is_callable( array( $e, 'getError' ) ) ) {  
+							Woo3pd_Helpscout::log( json_encode( $e->getError() ), 'error' );
+							error_log(json_encode($e->getError()));
+						}					
+						
+				}
+
+			} finally {
+				$attempts++;
 			}
-			exit;
-		
-		} 
+
+		}
 		
 	}
 
@@ -91,27 +113,40 @@ class Woo3pd_Helpscout_Webhook_Handler {
 	/**
 	 * Authenticate with the Helpscout API.
 	 */
-	public static function getClient( $refresh = false ) {
-
-		$appId        = Woo3pd_Helpscout::get_setting( 'appId' );
-		$appSecret    = Woo3pd_Helpscout::get_setting( 'appSecret' );
-		$accessToken  = Woo3pd_Helpscout::get_setting( 'accessToken' );
-		$refreshToken = Woo3pd_Helpscout::get_setting( 'refreshToken' );
+	public static function getClient() {
 
 		// Initialize API Client 
-	    self::$client = ApiClientFactory::createClient();
-		self::$client = self::$client->useClientCredentials($appId, $appSecret);
-	
-		if ( $accessToken && ! $refresh ) {	
-			self::$client->setAccessToken( $accessToken );
-		} else {
-			self::$client->getAuthenticator()->fetchAccessAndRefreshToken();
-			$accessToken = self::$client->getAuthenticator()->fetchAccessAndRefreshToken()->accessToken();
-			Woo3pd_Helpscout::set_settings( array( 'accessToken' => $accessToken ) );
-		}
+		if ( empty ( self::$client ) ) {
 
+			$appId        = Woo3pd_Helpscout::get_setting( 'appId' );
+			$appSecret    = Woo3pd_Helpscout::get_setting( 'appSecret' );
+			$accessToken  = Woo3pd_Helpscout::get_setting( 'accessToken' );
+
+			$accessToken  = '';
+
+			if ( $appId && $appSecret ) {
+				self::$client = ApiClientFactory::createClient();
+				self::$client = self::$client->useClientCredentials( $appId, $appSecret );			
+			} else {
+				throw new Exception( 'No tokens saved in settings.' );
+			}
+
+			if ( self::$client && $accessToken ) {	
+				self::$client->setAccessToken( $accessToken );
+			}
+		}
+	
 		return self::$client;
 
+	}
+
+	/**
+	 * Authenticate with the Helpscout API.
+	 */
+	public static function refreshToken() {
+		self::getClient()->getAuthenticator()->fetchAccessAndRefreshToken();
+		$accessToken = self::getClient()->getAuthenticator()->fetchAccessAndRefreshToken()->accessToken();
+		Woo3pd_Helpscout::set_settings( array( 'accessToken' => $accessToken ) );
 	}
 
 	/**
