@@ -46,5 +46,5 @@ Inbound Parse means that SendGrid will be the MX record for all emails to a subd
 ## Plugin Installation
 
 1. Clone the plugin.
-2. In the plugin's folder, run `composer install` to install dependencies.
+2. In the plugin's folder, run `composer install --no-dev` to install only required dependencies.
 3. Activate the plugin and go to `Settings > Woo3pd Helpscout` to choose service and enter settings.
