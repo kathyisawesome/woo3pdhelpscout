@@ -23,9 +23,10 @@ class Parse extends AbstractAPI {
 	 * Parse email into data.
 	 *
 	 * @param  string $html The html from the first conversation's thread, which is the email from Woo.
+	 * @param  string $prefix In case vendors start prefixing IDs with custom string.
 	 * @return  array
 	 */
-	public function parse_woo_email( $html ) {
+	public function parse_woo_email( $html, $prefix = '' ) {
 
 		$html = stripslashes( $html );
 
@@ -44,15 +45,15 @@ class Parse extends AbstractAPI {
 			throw new \Exception( 'Could not parse message content' );
 		}
 
-		$product_name_node         = $html_document->getElementById( 'product-name' );
-		$customer_email_node       = $html_document->getElementById( 'customer-email' );
-		$customer_name_node        = $html_document->getElementById( 'customer-name' );
-		$website_node              = $html_document->getElementById( 'ticket-web-site' );
-		$subject_node              = $html_document->getElementById( 'ticket-subject' );
-		$description_node          = $html_document->getElementById( 'ticket-description' );
-		$subscription_started_node = $html_document->getElementById( 'support-subscription-started' );
-		$subscription_ends_node    = $html_document->getElementById( 'support-subscription-ends' );
-		$site_status_node          = $html_document->getElementById( 'site-status-report' );
+		$product_name_node         = $html_document->getElementById( $prefix . 'product-name' );
+		$customer_email_node       = $html_document->getElementById( $prefix . 'customer-email' );
+		$customer_name_node        = $html_document->getElementById( $prefix . 'customer-name' );
+		$website_node              = $html_document->getElementById( $prefix . 'ticket-web-site' );
+		$subject_node              = $html_document->getElementById( $prefix . 'ticket-subject' );
+		$description_node          = $html_document->getElementById( $prefix . 'ticket-description' );
+		$subscription_started_node = $html_document->getElementById( $prefix . 'support-subscription-started' );
+		$subscription_ends_node    = $html_document->getElementById( $prefix . 'support-subscription-ends' );
+		$site_status_node          = $html_document->getElementById( $prefix . 'site-status-report' );
 
 		$ticket_data = array(
 			'product_name'         => $product_name_node ? $product_name_node->textContent : '',

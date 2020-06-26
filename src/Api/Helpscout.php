@@ -297,7 +297,8 @@ class Helpscout extends AbstractAPI {
 			throw new \Exception( 'Could not parse content from webhook.' );
 		}
 
-		$ticket_data = Parse::instance()->parse_woo_email( $html );
+		// Helpscout has started prefixing all IDs with `ex-`.
+		$ticket_data = Parse::instance()->parse_woo_email( $html, 'ex-' );
 
 		/**
 		 * Customer
