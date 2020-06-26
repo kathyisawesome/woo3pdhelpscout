@@ -208,7 +208,7 @@ abstract class AbstractApp {
 	public function log( $message, $type = 'error' ) {
 
 		if ( function_exists( 'wc_get_logger' ) ) {
-			wc_get_logger()->log( $type, $message, 'Woo3pdHelpscout' );
+			wc_get_logger()->log( $type, $message, array( 'source' => 'Woo3pdHelpscout' ) );
 		} else {
 			error_log( $type . ' : ' . $message );
 		}
