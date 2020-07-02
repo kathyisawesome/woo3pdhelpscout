@@ -3,6 +3,6 @@
         "psr-4": {"Woo3pdHelpscout\\": "src/"}
     },
     "require": {
-        "helpscout/api": "^2.0"
+        "helpscout/api": "^2.6"
     }
 }
