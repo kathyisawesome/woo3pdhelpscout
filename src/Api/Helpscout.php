@@ -293,12 +293,15 @@ class Helpscout extends AbstractAPI {
 		$thread_id    = $first_thread->id;
 		$html         = $first_thread->body;
 
+		// Get the original HTML source.
+		$source = $client->threads()->getSource( $conversation_id, $thread_id );
+		$html = $source->getOriginal();
+
 		if ( ! $html ) {
 			throw new \Exception( 'Could not parse content from webhook.' );
 		}
 
-		// Helpscout has started prefixing all IDs with `ex-`.
-		$ticket_data = Parse::instance()->parse_woo_email( $html, 'ex-' );
+		$ticket_data = Parse::instance()->parse_woo_email( $html );
 
 		/**
 		 * Customer
