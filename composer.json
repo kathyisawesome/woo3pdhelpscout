@@ -1,4 +1,7 @@
 {
+	"autoload": {
+        "psr-4": {"Woo3pdHelpscout\\": "src/"}
+    },
     "require": {
         "helpscout/api": "^2.0"
     }
