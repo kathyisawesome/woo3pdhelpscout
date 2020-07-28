@@ -40,6 +40,9 @@ class Webhook extends AbstractApp {
 
 		try {
 
+			// Give HS itself some time to process customers first.
+			sleep( 7 );
+
 			global $wp;
 
 			$api = $wp->query_vars[ App::ENDPOINT ];
