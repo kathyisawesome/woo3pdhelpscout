@@ -110,7 +110,7 @@ class Parse extends AbstractAPI {
 			$ticket_data['connected'] = '✔' === $connected_matches[1] ? __( 'Yes', 'woo3pd-helpscout' ) : __( 'No', 'woo3pd-helpscout' );
 		}
 
-		$this->validate_parsed_data( $ticket_data );
+		$this->validate_parsed_data( $ticket_data, $html );
 
 		return $ticket_data;
 
@@ -133,10 +133,11 @@ class Parse extends AbstractAPI {
 	 * Validate successful parsing of ticket data.
 	 *
 	 * @param  array  $parsed_data
+	 * @param  string $html
 	 * @return boolean
 	 * @throws  \Exception
 	 */
-	private function validate_parsed_data( $parsed_data ) {
+	private function validate_parsed_data( $parsed_data, $html ) {
 
 		$errors = array();
 
@@ -150,7 +151,9 @@ class Parse extends AbstractAPI {
 			$errors[] = 'Failed to parse Website field.';
 		}
 		if ( ! empty( $errors ) ) {
-			throw new \Exception( 'Failed to parse ticket data: ' . join( ' ', $errors ) );
+			$message = 'Failed to parse ticket data: ' . join( ' ', $errors );
+			$message .= "\n" . 'Original html: ' . $html;
+			throw new QuietException( $message );
 		}
 		return true;
 	}
