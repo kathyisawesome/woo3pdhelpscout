@@ -2,7 +2,7 @@
 /**
  * Handles responses from Gmail API.
  *
- * @package woo3pd_helpscout/api
+ * @package woo3pd_helpscout/parser
  */
 
 namespace Woo3pdHelpscout\Parser;
