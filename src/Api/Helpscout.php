@@ -287,7 +287,7 @@ class Helpscout extends AbstractAPI {
 		$conversation_id = $conversation->getId();
 		$mailbox_id      = $conversation->getMailboxId();
 		$payload         = $webhook->getDataObject();
-
+		
 		// Thread info from the webhook.
 		$threads      = $payload->_embedded->threads;
 		$first_thread = $threads[0];
@@ -295,8 +295,14 @@ class Helpscout extends AbstractAPI {
 		$html         = $first_thread->body;
 
 		// Get the original HTML source.
-		$source = $client->threads()->getSource( $conversation_id, $thread_id );
-		$html = $source->getOriginal();
+		try {
+			$source = $client->threads()->getSource( $conversation_id, $thread_id );
+			$html = $source->getOriginal();
+		} catch ( \GuzzleHttp\Exception\ClientException $e ) {
+		    if ( 404 === $e->getResponse()->getStatusCode() ) {
+		    	  throw new QuietException( 'This is not a *new* ticket submission.' );
+		    }
+		}
 
 		if ( ! $html ) {
 			throw new \Exception( 'Could not parse content from webhook.' );
