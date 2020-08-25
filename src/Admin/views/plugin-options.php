@@ -15,24 +15,15 @@ use Woo3pdHelpscout\Api\Sendgrid;
 
 		<?php
 
-			$current_api         = App::instance()->get_setting( 'api' );
-			$hs_client_id        = Helpscout::instance()->get_setting( 'client_id' );
-			$hs_client_secret    = Helpscout::instance()->get_setting( 'client_secret' );
-			$hs_secret_key       = Helpscout::instance()->get_setting( 'secret_key' );
-			$hs_mailbox_id       = Helpscout::instance()->get_setting( 'mailbox_id' );
-			$gmail_client_id     = Gmail::instance()->get_setting( 'client_id' );
-			$gmail_client_secret = Gmail::instance()->get_setting( 'client_secret' );
-			$gmail_token         = Gmail::instance()->get_setting( 'token' );
-			$gmail_topic         = Gmail::instance()->get_setting( 'topic' );
-			$gmail_label         = Gmail::instance()->get_setting( 'label' );
+			$current_api      = App::instance()->get_setting( 'api' );
+			$hs_client_id     = Helpscout::instance()->get_setting( 'client_id' );
+			$hs_client_secret = Helpscout::instance()->get_setting( 'client_secret' );
+			$hs_secret_key    = Helpscout::instance()->get_setting( 'secret_key' );
+			$hs_mailbox_id    = Helpscout::instance()->get_setting( 'mailbox_id' );
 
-			$sg_secret_key = Sendgrid::instance()->get_setting( 'secret_key' );
+			$sg_secret_key    = Sendgrid::instance()->get_setting( 'secret_key' );
 
-			$delete = App::instance()->get_setting( 'delete' );
-
-			$google_auth_url     = Gmail::instance()->get_auth_url();
-			$google_redirect_url = Gmail::instance()->get_redirect_url();
-			$revoke_url          = Gmail::instance()->get_revoke_url();
+			$delete           = App::instance()->get_setting( 'delete' );
 
 		?>
 
