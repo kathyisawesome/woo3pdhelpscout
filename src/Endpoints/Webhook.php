@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use HelpScout\Api\Webhooks\IncomingWebhook;
 use Woo3pdHelpscout\App;
 use Woo3pdHelpscout\AbstractApp;
+use Woo3pdHelpscout\Exceptions\QuietException;
 
 /**
  * Webhook class.
@@ -48,6 +49,11 @@ class Webhook extends AbstractApp {
 			$api = $wp->query_vars[ App::ENDPOINT ];
 
 			do_action( 'woo3pd_helpscout_handle_webhook', $api );
+
+		} catch ( QuietException $e ) {
+
+			// Nothing to log.// @todo- remove.
+			App::instance()->log( $e->getMessage(), 'log' );
 
 		} catch ( \Exception $e ) {
 

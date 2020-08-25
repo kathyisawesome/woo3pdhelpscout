@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Woo3pdHelpscout\App;
 use Woo3pdHelpscout\Api\Abstracts\AbstractAPI;
 use Woo3pdHelpscout\Parser\Parse;
+use Woo3pdHelpscout\Exceptions\QuietException;
 
 use HelpScout\Api\ApiClientFactory;
 use HelpScout\Api\Webhooks\IncomingWebhook;
