@@ -285,7 +285,8 @@ class Helpscout extends AbstractAPI {
 		// Get conversation info from Helpscout Webhooks.
 		$conversation    = $webhook->getConversation();
 		$conversation_id = $conversation->getId();
-		$mailbox_id      = $conversation->getMailboxId();
+		$mailbox_id      = $conversation->getMailboxId();	
+		$customer        = $conversation->getCustomer();
 		$payload         = $webhook->getDataObject();
 		
 		// Thread info from the webhook.
@@ -309,61 +310,6 @@ class Helpscout extends AbstractAPI {
 		}
 
 		$ticket_data = Parse::instance()->parse_woo_email( $html );
-
-		/**
-		 * Customer
-		 */
-		// Find existing customers.
-		$query   = sprintf( 'email:"%s"', $ticket_data['customer']['email'] );
-		$filters = ( new CustomerFilters() )
-			->withMailbox( $mailbox_id )
-			// See https://developer.helpscout.com/mailbox-api/endpoints/customers/list/#query for details on what you can do with query
-			->withQuery( $query )
-			->withSortField( 'modifiedAt' )
-			->withSortOrder( 'asc' );
-
-		$customers = $client->customers()->list( $filters )->toArray();
-
-		// We found a customer with this email.
-		if ( ! empty( $customers ) ) {
-
-			$customer = $customers[0];
-
-			$needsUpdate = false;
-
-			// Update first and last names.
-			if ( '' !== $ticket_data['customer']['first_name'] && $ticket_data['customer']['first_name'] !== $customer->getFirstName() ) {
-				$customer->setFirstName( substr( $ticket_data['customer']['first_name'], 0, 40 ) ); // Restrict to 40 char
-				$needsUpdate = true;
-			}
-
-			if ( '' !== $ticket_data['customer']['last_name'] && $ticket_data['customer']['last_name'] !== $customer->getLastName() ) {
-				$customer->setLastName( substr( $ticket_data['customer']['last_name'], 0, 40 ) ); // Restrict to 40 char
-				$needsUpdate = true;
-			}
-
-			if ( $needsUpdate ) {
-				$client->customers()->update( $customer );
-			}
-
-			$customer_id = $customer->getId();
-
-		} else {
-
-			$customer = new Customer();
-			if ( '' !== $ticket_data['customer']['first_name'] ) {
-				$customer->setFirstName( substr( $ticket_data['customer']['first_name'], 0, 40 ) );
-			}
-			
-			if ( '' !== $ticket_data['customer']['first_name'] ) {
-				$customer->setLastName( substr( $ticket_data['customer']['last_name'], 0, 40 ) );
-			}
-			$customer->addEmail( $ticket_data['customer']['email'], 'work' );
-			$customer_id = $client->customers()->create( $customer );
-
-		}
-
-		$client->conversations()->updateCustomer( $conversation_id, $customer_id );
 
 		/**
 		 * Threads
