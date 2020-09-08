@@ -188,7 +188,13 @@ class Helpscout extends AbstractAPI {
 				// Something is janky with the API.
 				$message  = $e->getError()->getMessage() . '</br>';
 				$message .= 'logRef: ' . $e->getError()->getLogRef() . '</br>';
-				$message .= 'errors : ' . join( '', $messages );
+
+				$errors = $e->getError()->getErrors();
+				$message .= 'errors : ';
+				foreach ( $errors as $err ) {
+					$message .= ' | ' . $err->getMessage();
+				}
+				
 				throw new \Exception( $message );
 
 			}
