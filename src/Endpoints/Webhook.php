@@ -42,7 +42,7 @@ class Webhook extends AbstractApp {
 		try {
 
 			// Give HS itself some time to process customers first.
-			sleep( 7 );
+			sleep( 10 );
 
 			global $wp;
 
