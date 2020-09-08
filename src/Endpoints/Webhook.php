@@ -53,7 +53,7 @@ class Webhook extends AbstractApp {
 		} catch ( QuietException $e ) {
 
 			// Nothing to log.// @todo- remove.
-			App::instance()->log( $e->getMessage(), 'log' );
+			App::instance()->log( $e->getMessage(), 'info' );
 
 		} catch ( \Exception $e ) {
 
