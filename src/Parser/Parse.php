@@ -101,7 +101,7 @@ class Parse extends AbstractAPI {
 		}
 
 		// Plugin version.
-		if ( preg_match( '/' . $ticket_data['product_name'] . ': (.+?) - ([A-Za-z0-9\.\-]+)/i', $ticket_data['status'], $plugin_version_matches ) ) {
+		if ( preg_match( '/' . $ticket_data['product_name'] . ': (.*?(?=\d))([A-Za-z0-9\.\-]+)/i', $ticket_data['status'], $plugin_version_matches ) ) {
 			$ticket_data['version'] = strip_tags( $plugin_version_matches[2] );
 		}
 
