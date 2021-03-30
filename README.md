@@ -2,8 +2,6 @@
 
 Parse WooCommerce.com support emails into HelpScout conversations
 
-NB: Currently this is not handling webhooks... while it's in progress it's parsing data from a [JSON file](https://github.com/kathyisawesome/woo3pd-helpscout/blob/master/includes/webhook-payload.json).
-
 ## 1. Get HelpScout API credentials.
 
 1. Go to your profile>My Apps and click "Create My App"
