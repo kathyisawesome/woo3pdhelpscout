@@ -141,6 +141,9 @@ class Controller extends AbstractApp {
 				case 'api':
 					$value = isset( $input['api'] ) && in_array( $input['api'], $apis ) ? $input['api'] : '';
 					break;
+				case 'debug':
+					$value = isset( $input['debug'] ) && $input['debug'] ? 'yes' : 'no';
+					break;
 				case 'delete':
 					$value = isset( $input['delete'] ) && $input['delete'] ? 'yes' : 'no';
 					break;

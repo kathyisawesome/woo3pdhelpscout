@@ -23,6 +23,7 @@ use Woo3pdHelpscout\Api\Sendgrid;
 
 			$sg_secret_key    = Sendgrid::instance()->get_setting( 'secret_key' );
 
+			$debug            = App::instance()->get_setting( 'debug' );
 			$delete           = App::instance()->get_setting( 'delete' );
 
 		?>
@@ -104,6 +105,12 @@ use Woo3pdHelpscout\Api\Sendgrid;
 				</td>
 			</tr>
 
+			<tr>
+				<th scope="row"><label for=""><?php esc_html_e( 'Enable debug mode', 'woo3pd-helpscout' ); ?></label></th>
+				<td>
+					<input type="checkbox" name="woo3pd_helpscout[debug]" value="1" <?php checked( $debug, 'yes' ); ?> />
+				</td>
+			</tr>
 			<tr>
 				<th scope="row"><label for=""><?php esc_html_e( 'Completely remove options on plugin removal', 'woo3pd-helpscout' ); ?></label></th>
 				<td>

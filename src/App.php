@@ -45,6 +45,7 @@ class App extends AbstractApp {
 	 */
 	protected $default_settings = array(
 		'api'    => 'helpscout',
+		'debug'  => 'no',
 		'delete' => 'no',
 	);
 
