@@ -2,7 +2,7 @@
 /**
  * Abstract application class.
  *
- * Copyright (c) 2019, TIV.NET INC. All Rights Reserved.
+ * Copyright (c) 2019, Backcourt Development. All Rights Reserved.
  */
 
 namespace Woo3pdHelpscout;
@@ -207,10 +207,13 @@ abstract class AbstractApp {
 	 */
 	public function log( $message, $type = 'error' ) {
 
-		if ( function_exists( 'wc_get_logger' ) ) {
-			wc_get_logger()->log( $type, $message, array( 'source' => 'Woo3pdHelpscout' ) );
-		} else {
-			error_log( $type . ' : ' . $message );
+		if ( 'yes' === App::instance()->get_setting( 'debug' ) ) {
+
+			if ( function_exists( 'wc_get_logger' ) ) {
+				wc_get_logger()->log( $type, $message, array( 'source' => 'Woo3pdHelpscout' ) );
+			} else {
+				error_log( $type . ' : ' . $message );
+			}
 		}
 	}
 }
