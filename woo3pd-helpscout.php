@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Woo3pd Helpscout Webhooks
+Plugin Name: Woo3pd Helpscout Integration
 Plugin URI: http://www.kathyisawesome.com/
 Description: Parse WooCommerce.com support emails into HelpScout conversations
 Version: 0.0.1
