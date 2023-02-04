@@ -1,1 +1,7 @@
+deploy/
+languages/
+node_modules/
 vendor/
+package-lock.json
+sftp-config.json
+*.bak
