@@ -7,7 +7,7 @@ Version: 0.0.1
 Author: Kathy Darling
 Author URI: http://www.kathyisawesome.com
 License: GPL3
-Text Domain: woo3pd-helpscout
+Text Domain: woo3pdhelpscout
 
 Copyright 2020  Kathy Darling  (email: kathy@kathyisawesome.com)
 

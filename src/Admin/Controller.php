@@ -80,7 +80,7 @@ class Controller extends AbstractApp {
 	 * Add options page
 	 */
 	public function add_options_page() {
-		add_options_page( __( 'Woo3pd HelpScout Options Page', 'woo3pd-helpscout' ), __( 'Woo3pd HelpScout', 'woo3pd-helpscout' ), 'manage_options', App::OPTION, array( $this, 'render_form' ) );
+		add_options_page( __( 'Woo3pd HelpScout Options Page', 'woo3pdhelpscout' ), __( 'Woo3pd HelpScout', 'woo3pdhelpscout' ), 'manage_options', App::OPTION, array( $this, 'render_form' ) );
 	}
 
 	/**
@@ -93,7 +93,7 @@ class Controller extends AbstractApp {
 	 */
 	public function add_action_links( $links, $file ) {
 
-		$plugin_link = '<a href="' . add_query_arg( 'page', App::OPTION, admin_url( 'options-general.php' ) ) . '">' . __( 'Settings', 'woo3pd-helpscout' ) . '</a>';
+		$plugin_link = '<a href="' . add_query_arg( 'page', App::OPTION, admin_url( 'options-general.php' ) ) . '">' . __( 'Settings', 'woo3pdhelpscout' ) . '</a>';
 
 		// Make the 'Settings' link appear first
 		array_unshift( $links, $plugin_link );
@@ -110,7 +110,7 @@ class Controller extends AbstractApp {
 	 */
 	public function add_meta_links( $plugin_meta, $plugin_file ) {
 		if ( $plugin_file === plugin_basename( __FILE__ ) ) {
-			$plugin_meta[] = '<a class="dashicons-before dashicons-awards" href="' . self::DONATE_URL . '" target="_blank">' . __( 'Donate', 'woo3pd-helpscout' ) . '</a>';
+			$plugin_meta[] = '<a class="dashicons-before dashicons-awards" href="' . self::DONATE_URL . '" target="_blank">' . __( 'Donate', 'woo3pdhelpscout' ) . '</a>';
 		}
 		return $plugin_meta;
 	}

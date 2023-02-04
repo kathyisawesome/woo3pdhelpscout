@@ -61,8 +61,8 @@ class Webhook extends AbstractApp {
 
 			// Email notification of failure.
 			$to       = get_bloginfo( 'admin_email' );
-			$subject  = sprintf( esc_html__( 'Webhook failure notification for %s', 'woo3pd-helpscout' ), bloginfo( 'name' ) );
-			$message  = sprintf( esc_html__( 'Webhook failured with error code: %s', 'woo3pd-helpscout' ), $e->getMessage() );
+			$subject  = sprintf( esc_html__( 'Webhook failure notification for %s', 'woo3pdhelpscout' ), bloginfo( 'name' ) );
+			$message  = sprintf( esc_html__( 'Webhook failured with error code: %s', 'woo3pdhelpscout' ), $e->getMessage() );
 			$message .= '<pre> ' . json_encode( $_POST ) . '</pre>';
 
 			// wp_mail( $to, $subject, $message );

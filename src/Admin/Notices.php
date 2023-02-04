@@ -20,7 +20,7 @@ class Notices {
 
 		$notice = sprintf(
 			// Translators: %1$s link to documentation. %2$s minimum required PHP version number.
-			__( 'Woo3pd Helpscout requires at least PHP <strong>%1$s</strong>. Learn <a href="%2$s">how to update PHP</a>.', 'woo3pd-helpscout' ),
+			__( 'Woo3pd Helpscout requires at least PHP <strong>%1$s</strong>. Learn <a href="%2$s">how to update PHP</a>.', 'woo3pdhelpscout' ),
 			self::MIN_PHP,
 			'https://docs.woocommerce.com/document/how-to-update-your-php-version/'
 		);

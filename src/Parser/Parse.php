@@ -107,7 +107,7 @@ class Parse extends AbstractAPI {
 
 		// Connected to WooCommerce.com. Check for unicode character
 		if ( preg_match( '/Connected to WooCommerce.com: (.+?)/iu', $ticket_data['status'], $connected_matches ) ) {
-			$ticket_data['connected'] = '✔' === $connected_matches[1] ? __( 'Yes', 'woo3pd-helpscout' ) : __( 'No', 'woo3pd-helpscout' );
+			$ticket_data['connected'] = '✔' === $connected_matches[1] ? __( 'Yes', 'woo3pdhelpscout' ) : __( 'No', 'woo3pdhelpscout' );
 		}
 
 		$this->validate_parsed_data( $ticket_data, $html );

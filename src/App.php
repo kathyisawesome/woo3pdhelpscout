@@ -83,7 +83,7 @@ class App extends AbstractApp {
 		/**
 		 * Required by {@see \AbstractApp::load_translations()}.
 		 */
-		$this->textdomain = 'woo3pd-helpscout';
+		$this->textdomain = 'woo3pdhelpscout';
 		$this->load_translations();
 
 		// Set-up install action.

@@ -6,7 +6,7 @@ use Woo3pdHelpscout\Api\Sendgrid;
 ?>
 <div class="wrap">
 
-	<h1><?php esc_html_e( 'Woo3pd HelpScout Settings', 'woo3pd-helpscout' ); ?></h1>
+	<h1><?php esc_html_e( 'Woo3pd HelpScout Settings', 'woo3pdhelpscout' ); ?></h1>
 
 	<!-- Beginning of the Plugin Options Form -->
 	<form method="post" action="<?php echo admin_url( 'options.php' ); ?>">
@@ -41,19 +41,19 @@ use Woo3pdHelpscout\Api\Sendgrid;
 
 		<table class="form-table">
 			<tr>
-				<th scope="row"><?php esc_html_e( 'Delivery API', 'woo3pd-helpscout' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'Delivery API', 'woo3pdhelpscout' ); ?></th>
 				<td>
 					<label for="helpscout_api">
 						<input id="helpscout_api" type="radio" name="woo3pd_helpscout[api]" value="helpscout" <?php checked( $current_api, 'helpscout' ); ?>/>
-						<?php esc_html_e( 'Helpscout Webhook', 'woo3pd-helpscout' ); ?>
+						<?php esc_html_e( 'Helpscout Webhook', 'woo3pdhelpscout' ); ?>
 					</label>
 					
 					<label for="sendgrid_api">
 						<input id="sendgrid_api" type="radio" name="woo3pd_helpscout[api]" value="sendgrid" <?php checked( $current_api, 'sendgrid' ); ?>/>
-						<?php esc_html_e( 'SendGrid API', 'woo3pd-helpscout' ); ?>
+						<?php esc_html_e( 'SendGrid API', 'woo3pdhelpscout' ); ?>
 					</label>
 				
-					<p><?php esc_html_e( 'Your webhook URL', 'woo3pd-helpscout' ); ?>
+					<p><?php esc_html_e( 'Your webhook URL', 'woo3pdhelpscout' ); ?>
 					<?php foreach ( App::instance()->get_apis()  as $api ) : ?>
 						<code class="toggle-api show-if-<?php echo esc_attr( $api ); ?>" <?php echo $api !== $current_api ? 'style="display:none"' : ''; ?>>
 							<?php echo esc_url( add_query_arg( array( 'woo3pd-api' => $api ), site_url() ) ); ?>
@@ -67,26 +67,26 @@ use Woo3pdHelpscout\Api\Sendgrid;
 			<!-- Helpscout API settings -->
 
 			<tr>
-				<th scope="row"><label for="hs_client_id"><?php esc_html_e( 'Helpscout App ID', 'woo3pd-helpscout' ); ?></label></th>
+				<th scope="row"><label for="hs_client_id"><?php esc_html_e( 'Helpscout App ID', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
 					<input type="text" id="hs_client_id" class="regular-text" name="woo3pd_helpscout[helpscout][client_id]" value="<?php echo esc_attr( $hs_client_id ); ?>" />
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="hs_client_secret"><?php esc_html_e( 'Helpscout App Secret', 'woo3pd-helpscout' ); ?></label></th>
+				<th scope="row"><label for="hs_client_secret"><?php esc_html_e( 'Helpscout App Secret', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
 					<input type="text" id="hs_client_secret" class="regular-text" name="woo3pd_helpscout[helpscout][client_secret]" value="<?php echo esc_attr( $hs_client_secret ); ?>" />
 				</td>
 			</tr>
 			<tr class="toggle-api show-if-helpscout" <?php echo 'helpscout' !== $current_api ? 'style="display:none"' : ''; ?> >
-				<th scope="row"><label for="hs_secret_key"><?php esc_html_e( 'Helpscout Webhook Secret Key', 'woo3pd-helpscout' ); ?></label></th>
+				<th scope="row"><label for="hs_secret_key"><?php esc_html_e( 'Helpscout Webhook Secret Key', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
 					<input type="text" id="hs_secret_key" class="regular-text" name="woo3pd_helpscout[helpscout][secret_key]" value="<?php echo esc_attr( $hs_secret_key ); ?>" />
 				</td>
 			</tr>
 
 			<tr class="toggle-api show-if-gmail show-if-sendgrid" <?php echo 'helpscout' === $current_api ? 'style="display:none"' : ''; ?> >
-				<th scope="row"><label for="hs_mailbox_id"><?php esc_html_e( 'Helpscout Mailbox Id', 'woo3pd-helpscout' ); ?></label></th>
+				<th scope="row"><label for="hs_mailbox_id"><?php esc_html_e( 'Helpscout Mailbox Id', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
 					<input type="text" id="hs_mailbox_id" name="woo3pd_helpscout[helpscout][mailbox_id]" value="<?php echo esc_attr( $hs_mailbox_id ); ?>" />
 				</td>
@@ -99,20 +99,20 @@ use Woo3pdHelpscout\Api\Sendgrid;
 			<!-- SendGrid API settings -->
 
 			<tr class="toggle-api show-if-sendgrid" <?php echo 'sendgrid' !== $current_api ? 'style="display:none"' : ''; ?> >
-				<th scope="row"><label for="sendgrid_secret_key"><?php esc_html_e( 'SendGrid Webhook Secret Key', 'woo3pd-sendgrid' ); ?></label></th>
+				<th scope="row"><label for="sendgrid_secret_key"><?php esc_html_e( 'SendGrid Webhook Secret Key', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
 					<input type="text" id="sendgrid_secret_key" class="regular-text" name="woo3pd_helpscout[sendgrid][secret_key]" value="<?php echo esc_attr( $sg_secret_key ); ?>" />
 				</td>
 			</tr>
 
 			<tr>
-				<th scope="row"><label for=""><?php esc_html_e( 'Enable debug mode', 'woo3pd-helpscout' ); ?></label></th>
+				<th scope="row"><label for=""><?php esc_html_e( 'Enable debug mode', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
 					<input type="checkbox" name="woo3pd_helpscout[debug]" value="1" <?php checked( $debug, 'yes' ); ?> />
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for=""><?php esc_html_e( 'Completely remove options on plugin removal', 'woo3pd-helpscout' ); ?></label></th>
+				<th scope="row"><label for=""><?php esc_html_e( 'Completely remove options on plugin removal', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
 					<input type="checkbox" name="woo3pd_helpscout[delete]" value="1" <?php checked( $delete, 'yes' ); ?> />
 				</td>

@@ -356,7 +356,7 @@ class Helpscout extends AbstractAPI {
 		 */
 		$updatedText = sprintf(
 			// Translators: %s is the date the webhook was processed.
-			esc_html_x( 'Processed by webhook on %1$s at %2$s', 'Date and time', 'woo3pd-helpscout' ),
+			esc_html_x( 'Processed by webhook on %1$s at %2$s', 'Date and time', 'woo3pdhelpscout' ),
 			current_time( get_option( 'date_format' ) ),
 			current_time( get_option( 'time_format' ) ),
 		);
@@ -381,14 +381,14 @@ class Helpscout extends AbstractAPI {
 		if ( false === $fields ) {
 
 			$fields = array(
-				'customer_name'        => __( 'Customer Name', 'woo3pd-helpscout' ),
-				'website'              => __( 'Website', 'woo3pd-helpscout' ),
-				'subscription_started' => __( 'Subscription Started', 'woo3pd-helpscout' ),
-				'subscription_ends'    => __( 'Subscription Ends', 'woo3pd-helpscout' ),
-				'wc_version'           => __( 'WC Version', 'woo3pd-helpscout' ),
-				'version'              => __( 'Version', 'woo3pd-helpscout' ),
-				'php_version'          => __( 'PHP Version', 'woo3pd-helpscout' ),
-				'connected'            => __( 'Connected to WooCommerce.com' ),
+				'customer_name'        => __( 'Customer Name', 'woo3pdhelpscout' ),
+				'website'              => __( 'Website', 'woo3pdhelpscout' ),
+				'subscription_started' => __( 'Subscription Started', 'woo3pdhelpscout' ),
+				'subscription_ends'    => __( 'Subscription Ends', 'woo3pdhelpscout' ),
+				'wc_version'           => __( 'WC Version', 'woo3pdhelpscout' ),
+				'version'              => __( 'Version', 'woo3pdhelpscout' ),
+				'php_version'          => __( 'PHP Version', 'woo3pdhelpscout' ),
+				'connected'            => __( 'Connected to WooCommerce.com', 'woo3pdhelpscout' ),
 			);
 
 			set_transient( 'woo3pd_helpscout_translated_custom_fields-' . $locale, $fields, 24 * HOUR_IN_SECONDS );
