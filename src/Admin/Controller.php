@@ -2,7 +2,7 @@
 /**
  * Handles settings for plugins.
  *
- * @package woo3pd_helpscout/Woo3pdHelpscout/admin
+ * @package woo3pdHelpscout/Woo3pdHelpscout/admin
  */
 namespace Woo3pdHelpscout\Admin;
 

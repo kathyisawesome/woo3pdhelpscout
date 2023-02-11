@@ -3,7 +3,7 @@
  * Scheduled Actions.
  * Gmail pub/sub needs to renew "watch" every day.
  *
- * @package woo3pd_helpscout/actions
+ * @package woo3pdHelpscout/actions
  */
 namespace Woo3pdHelpscout\Actions;
 

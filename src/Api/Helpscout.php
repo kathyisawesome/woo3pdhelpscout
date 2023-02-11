@@ -1,8 +1,8 @@
 <?php
 /**
- * Handles responses from Gmail API.
+ * Handles responses from Helpscout.
  *
- * @package woo3pd_helpscout/Woo3pdHelpscout/api
+ * @package woo3pdHelpscout/Woo3pdHelpscout/api
  */
 
 namespace Woo3pdHelpscout\Api;

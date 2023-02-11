@@ -1,8 +1,8 @@
 <?php
 /**
- * Handles responses from Gmail API.
+ * Parse the Email from WooCommerce.com's form.
  *
- * @package woo3pd_helpscout/parser
+ * @package woo3pdHelpscout
  */
 
 namespace Woo3pdHelpscout\Parser;

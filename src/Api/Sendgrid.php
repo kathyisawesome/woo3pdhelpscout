@@ -1,8 +1,8 @@
 <?php
 /**
- * Handles responses from Gmail API.
+ * Handles webhook from SendGrid API.
  *
- * @package woo3pd_helpscout/api
+ * @package woo3pdHelpscout/api
  */
 
 namespace Woo3pdHelpscout\Api;

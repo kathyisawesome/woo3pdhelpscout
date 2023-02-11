@@ -2,7 +2,7 @@
 /**
  * Handles responses to our Webhook.
  *
- * @package woo3pd_helpscout/Woo3pdHelpscout/api
+ * @package woo3pdHelpscout/Woo3pdHelpscout/api
  */
 namespace Woo3pdHelpscout\Endpoints;
 
