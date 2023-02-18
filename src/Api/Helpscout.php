@@ -389,6 +389,7 @@ class Helpscout extends AbstractAPI {
 				'version'              => __( 'Version', 'woo3pdhelpscout' ),
 				'php_version'          => __( 'PHP Version', 'woo3pdhelpscout' ),
 				'connected'            => __( 'Connected to WooCommerce.com', 'woo3pdhelpscout' ),
+				'wpdotcom'             => __( 'Hosted at WordPress.com', 'woo3pdhelpscout' ),
 			);
 
 			set_transient( 'woo3pd_helpscout_translated_custom_fields-' . $locale, $fields, 24 * HOUR_IN_SECONDS );

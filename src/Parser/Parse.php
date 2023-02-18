@@ -74,6 +74,7 @@ class Parse extends AbstractAPI {
 			'php_version'          => '',
 			'version'              => '',
 			'connected'            => '',
+			'wpdotcom'             => '',
 		);
 
 		// Stash full name as it's own key for custom fields.
@@ -108,6 +109,11 @@ class Parse extends AbstractAPI {
 		// Connected to WooCommerce.com. Check for unicode character
 		if ( preg_match( '/Connected to WooCommerce.com: (.+?)/iu', $ticket_data['status'], $connected_matches ) ) {
 			$ticket_data['connected'] = '✔' === $connected_matches[1] ? __( 'Yes', 'woo3pdhelpscout' ) : __( 'No', 'woo3pdhelpscout' );
+		}
+
+		// Hosted at WordPress.com
+		if ( preg_match( '/WP\.com Site Helper/iu', $ticket_data['status'], $dotcommatches ) ) {
+			$ticket_data['wpdotcom'] = ! empty( $dotcommatches ) ? __( 'Yes', 'woo3pdhelpscout' ) : __( 'No', 'woo3pdhelpscout' );
 		}
 
 		$this->validate_parsed_data( $ticket_data, $html );
