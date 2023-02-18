@@ -96,11 +96,6 @@ class App extends AbstractApp {
 		Endpoints\Controller::instance()->setup_hooks();
 		Endpoints\Webhook::instance()->setup_hooks();
 
-		// The GMAIL watch action.
-		if ( 'gmail' === $this->get_api() ) {
-			Actions\Scheduled::instance()->setup_hooks();
-		}
-
 		if ( is_admin() ) {
 			Admin\Controller::instance()->setup_hooks();
 		}

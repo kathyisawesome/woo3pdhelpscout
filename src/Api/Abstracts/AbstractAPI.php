@@ -15,7 +15,7 @@ use Woo3pdHelpscout\AbstractApp;
 use Woo3pdHelpscout\Api\Helpscout;
 
 /**
- * Gmail class.
+ * API class.
  */
 abstract class AbstractAPI extends AbstractApp {
 
@@ -294,9 +294,9 @@ abstract class AbstractAPI extends AbstractApp {
 			self::TOKENURL,
 			array(
 				'body' => array(
-					'client_id'     => $gmail_client_id,
-					'client_secret' => $gmail_client_secret,
-					'refresh_token' => $gmail_refresh,
+					'client_id'     => $client_id,
+					'client_secret' => $client_secret,
+					'refresh_token' => $refresh,
 					'grant_type'    => 'refresh_token',
 				),
 			)

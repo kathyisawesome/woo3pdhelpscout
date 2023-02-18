@@ -1,6 +1,5 @@
 <?php
 use Woo3pdHelpscout\App;
-use Woo3pdHelpscout\Api\Gmail;
 use Woo3pdHelpscout\Api\Helpscout;
 use Woo3pdHelpscout\Api\Sendgrid;
 ?>
@@ -85,7 +84,7 @@ use Woo3pdHelpscout\Api\Sendgrid;
 				</td>
 			</tr>
 
-			<tr class="toggle-api show-if-gmail show-if-sendgrid" <?php echo 'helpscout' === $current_api ? 'style="display:none"' : ''; ?> >
+			<tr class="toggle-api show-if-sendgrid" <?php echo 'helpscout' === $current_api ? 'style="display:none"' : ''; ?> >
 				<th scope="row"><label for="hs_mailbox_id"><?php esc_html_e( 'Helpscout Mailbox Id', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
 					<input type="text" id="hs_mailbox_id" name="woo3pd_helpscout[helpscout][mailbox_id]" value="<?php echo esc_attr( $hs_mailbox_id ); ?>" />
