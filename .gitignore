@@ -5,3 +5,5 @@ vendor/
 package-lock.json
 sftp-config.json
 *.bak
+bookmarks.json
+webhook-payload.json
