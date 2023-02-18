@@ -1,6 +1,9 @@
 <?php
 /**
  * Handles responses to our Webhook.
+ * 
+ * @since 1.0.0
+ * @version 1.0.0
  *
  * @package woo3pdHelpscout/Woo3pdHelpscout/api
  */
@@ -24,31 +27,26 @@ class Webhook extends AbstractApp {
 	 * constructor.
 	 */
 	public function setup_hooks() {
-		foreach ( App::instance()->get_apis() as $api ) {
-			add_action( 'woo3pd_api_' . $api, array( $this, 'process_webhook' ) );
-		}
-		add_action( 'woo3pd_helpscout_handle_webhook', array( $this, 'handle' ) );
+		$provider = App::instance()->get_api();
+		add_action( 'woo3pd_api_' . $provider, array( $this, 'process_webhook' ) );	
 	}
 
 	/**
-	 * Check for Webhook Response.
-	 *
-	 * @param  string $api The source of this API webhook.
+	 * Send to appropriate vendor for proper parsing.
 	 *
 	 * @throws  \Exception
 	 */
-	public function process_webhook( $api ) {
+	public function process_webhook() {
 
 		try {
 
 			// Give HS itself some time to process customers first.
 			sleep( 10 );
 
-			global $wp;
+			$provider = App::instance()->get_api();
 
-			$api = $wp->query_vars[ App::ENDPOINT ];
-
-			do_action( 'woo3pd_helpscout_handle_webhook', $api );
+			$api = App::instance()->get_api_instance( $provider );
+			$api->handle_webhook();
 
 		} catch ( QuietException $e ) {
 
@@ -73,16 +71,6 @@ class Webhook extends AbstractApp {
 
 		}
 
-	}
-
-	/**
-	 * Send to appropriate vendor for proper parsing.
-	 *
-	 * @param  string $api The source of this API webhook.
-	 */
-	public function handle( $api ) {
-		$api = App::instance()->get_api_instance( $api );
-		$api->handle_webhook();
 	}
 
 }
