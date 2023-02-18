@@ -19,7 +19,7 @@ class App extends AbstractApp {
 	/**
 	* @constant string donate url
 	*/
-	const DONATE_URL = 'https://www.paypal.com/fundraiser/charity/1451316';
+	const DONATE_URL = 'https://www.paypal.com/paypalme/kathyisawesome';
 
 	/**
 	* @constant string the endpoint
