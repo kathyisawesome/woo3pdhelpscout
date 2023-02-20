@@ -68,6 +68,7 @@ class Helpscout extends AbstractAPI {
 		'wcVersion'           => '',
 		'plugin_version'      => '',
 		'phpVersion'          => '',
+		'wpdotcom'            => '',
 	);
 
 	/**
