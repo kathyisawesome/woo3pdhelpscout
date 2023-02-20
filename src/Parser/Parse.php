@@ -49,7 +49,6 @@ class Parse extends AbstractAPI {
 		$customer_email_node       = $html_document->getElementById( 'customer-email' );
 		$customer_name_node        = $html_document->getElementById( 'customer-name' );
 		$website_node              = $html_document->getElementById( 'ticket-web-site' );
-		$subject_node              = $html_document->getElementById( 'ticket-subject' );
 		$description_node          = $html_document->getElementById( 'ticket-description' );
 		$subscription_started_node = $html_document->getElementById( 'support-subscription-started' );
 		$subscription_ends_node    = $html_document->getElementById( 'support-subscription-ends' );
@@ -67,7 +66,6 @@ class Parse extends AbstractAPI {
 			'subscription_started' => $subscription_started_node ? $subscription_started_node->textContent : '',
 			'subscription_ends'    => $subscription_ends_node ? $subscription_ends_node->textContent : '',
 			'website'              => $website_node ? esc_url_raw( $website_node->textContent ) : '',
-			'subject'              => $subject_node ? $subject_node->textContent : '',
 			'description'          => $description_node ? str_replace( array( '<dd id="ticket-description" style="padding-bottom: 1em;">', '</dd>' ), '', $html_document->saveHTML( $description_node ) ) : 'Failed to parse ticket Description!',
 			'status'               => $site_status_node ? trim( str_replace( '`', '', strip_tags( $html_document->saveHTML( $site_status_node ), '<br>' ) ) ) : '',
 			'wc_version'           => '',
@@ -149,9 +147,6 @@ class Parse extends AbstractAPI {
 
 		if ( empty( $parsed_data['customer'] ) && empty( $parsed_data['customer']['email'] ) ) {
 			$errors[] = 'Failed to parse Email field.';
-		}
-		if ( empty( $parsed_data['subject'] ) ) {
-			$errors[] = 'Failed to parse Subject field.';
 		}
 		if ( empty( $parsed_data['website'] ) ) {
 			$errors[] = 'Failed to parse Website field.';
