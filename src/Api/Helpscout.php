@@ -131,20 +131,29 @@ class Helpscout extends AbstractAPI {
 		/**
 		 * Threads
 		 */
+
 		// System status as note.
-		$noteThread = new NoteThread();
-		$noteThread->setText( '<pre>' . $ticket_data['status'] . '</pre>' );
+		if ( ! empty( $ticket_data['status'] ) ) {
+		
+			$noteThread = new NoteThread();
+			$noteThread->setText( '<pre>' . $ticket_data['status'] . '</pre>' );
 
-		$client->threads()->create( $conversation_id, $noteThread );
+			$client->threads()->create( $conversation_id, $noteThread );
 
-		// Clients question to separate thread.
-		$customerThread = new CustomerThread();
+		}
 
-		// I think the customer is wrong here
-		$customerThread->setCustomer( $customer );
-		$customerThread->setText( $ticket_data['description'] );
+		// Customer question to separate thread.
+		if ( ! empty( $ticket_data['description'] ) ) {
 
-		$client->threads()->create( $conversation_id, $customerThread );
+			$customerThread = new CustomerThread();
+
+			// I think the customer is wrong here
+			$customerThread->setCustomer( $customer );
+			$customerThread->setText( $ticket_data['description'] );
+
+			$client->threads()->create( $conversation_id, $customerThread );
+
+		}
 
 		/**
 		 * Tags
@@ -163,16 +172,19 @@ class Helpscout extends AbstractAPI {
 		}
 
 		/**
-		 * Since we can't remove a thread, reduce orginal thread to a time notice of when it was parsed.
+		 * Since we can't remove a thread, reduce orginal thread to a time notice of when it was parsed (only IF successfully parsed).
 		 */
-		$updatedText = sprintf(
-			// Translators: %s is the date the webhook was processed.
-			esc_html_x( 'Processed by webhook on %1$s at %2$s', 'Date and time', 'woo3pdhelpscout' ),
-			current_time( get_option( 'date_format' ) ),
-			current_time( get_option( 'time_format' ) ),
-		);
+		if ( ! empty( $ticket_data['status'] ) && ! empty( $ticket_data['description'] ) ) {
+			$updatedText = sprintf(
+				// Translators: %s is the date the webhook was processed.
+				esc_html_x( 'Processed by webhook on %1$s at %2$s', 'Date and time', 'woo3pdhelpscout' ),
+				current_time( get_option( 'date_format' ) ),
+				current_time( get_option( 'time_format' ) ),
+			);
 
-		$client->threads()->updateText( $conversation_id, $thread_id, $updatedText );
+			$client->threads()->updateText( $conversation_id, $thread_id, $updatedText );
+
+		}
 
 	}
 

@@ -66,7 +66,7 @@ class Parse extends AbstractAPI {
 			'subscription_started' => $subscription_started_node ? $subscription_started_node->textContent : '',
 			'subscription_ends'    => $subscription_ends_node ? $subscription_ends_node->textContent : '',
 			'website'              => $website_node ? esc_url_raw( $website_node->textContent ) : '',
-			'description'          => $description_node ? str_replace( array( '<dd id="ticket-description" style="padding-bottom: 1em;">', '</dd>' ), '', $html_document->saveHTML( $description_node ) ) : 'Failed to parse ticket Description!',
+			'description'          => $description_node ? str_replace( array( '<dd id="ticket-description" style="padding-bottom: 1em;">', '</dd>' ), '', $html_document->saveHTML( $description_node ) ) : '',
 			'status'               => $site_status_node ? trim( str_replace( '`', '', strip_tags( $html_document->saveHTML( $site_status_node ), '<br>' ) ) ) : '',
 			'wc_version'           => '',
 			'php_version'          => '',
@@ -114,8 +114,6 @@ class Parse extends AbstractAPI {
 			$ticket_data['wpdotcom'] = ! empty( $dotcommatches ) ? __( 'Yes', 'woo3pdhelpscout' ) : __( 'No', 'woo3pdhelpscout' );
 		}
 
-		$this->validate_parsed_data( $ticket_data, $html );
-
 		return $ticket_data;
 
 	}
@@ -132,32 +130,5 @@ class Parse extends AbstractAPI {
 		$product_name = str_replace( 'woocommerce-', '', $product_name );
 		return $product_name;
 	}
-
-	/**
-	 * Validate successful parsing of ticket data.
-	 *
-	 * @param  array  $parsed_data
-	 * @param  string $html
-	 * @return boolean
-	 * @throws  \Exception
-	 */
-	private function validate_parsed_data( $parsed_data, $html ) {
-
-		$errors = array();
-
-		if ( empty( $parsed_data['customer'] ) && empty( $parsed_data['customer']['email'] ) ) {
-			$errors[] = 'Failed to parse Email field.';
-		}
-		if ( empty( $parsed_data['website'] ) ) {
-			$errors[] = 'Failed to parse Website field.';
-		}
-		if ( ! empty( $errors ) ) {
-			$message = 'Failed to parse ticket data: ' . join( ' ', $errors );
-			$message .= "\n" . 'Original html: ' . $html;
-			throw new QuietException( $message );
-		}
-		return true;
-	}
-
 
 }
