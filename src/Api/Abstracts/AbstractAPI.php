@@ -410,7 +410,7 @@ abstract class AbstractAPI extends AbstractApp {
 	 * @param  array $ticket_data
 	 * @return []CustomField
 	 */
-	private function get_custom_fields( $mailbox_id, $ticket_data ) {
+	protected function get_custom_fields( $mailbox_id, $ticket_data ) {
 
 		$custom_fields = array();
 
