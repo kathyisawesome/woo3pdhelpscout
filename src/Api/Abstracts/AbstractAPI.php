@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Woo3pdHelpscout\App;
 use Woo3pdHelpscout\AbstractApp;
-use Woo3pdHelpscout\Api\Helpscout;
+use HelpScout\Api\ApiClientFactory;
 
 /**
  * API class.
@@ -40,6 +40,10 @@ abstract class AbstractAPI extends AbstractApp {
 	const SCOPE = '';
 
 	/**
+	 * @var obj HelpScout\Api\ApiClient
+	 */
+	protected $client;
+
 	 * Extra API-specific settings.
 	 *
 	 * @var array the DB settings for this API.
@@ -242,13 +246,49 @@ abstract class AbstractAPI extends AbstractApp {
 
 	}
 
+	/*
+	-----------------------------------------------------------------------------------*/
+	/*
+	 HelpScout Client Functions */
+	/*-----------------------------------------------------------------------------------*/
+
+	/**
+	 * Authenticate with the Helpscout API.
+	 */
+	public function get_client() {
+
+		// Initialize API Client
+		if ( empty( $this->client ) ) {
+
+			$appId       = $this->get_setting( 'client_id' );
+			$appSecret   = $this->get_setting( 'client_secret' );
+			$accessToken = $this->get_setting( 'access_token' );
+
+			$accessToken = '';
+
+			if ( $appId && $appSecret ) {
+				$this->client = ApiClientFactory::createClient();
+				$this->client = $this->client->useClientCredentials( $appId, $appSecret );
+			} else {
+				throw new \Exception( 'No tokens saved in settings.' );
+			}
+
+			if ( $this->client && $accessToken ) {
+				$this->client->setAccessToken( $accessToken );
+			}
+		}
+
+		return $this->client;
+
+	}
+
 
 	/**
 	 * Auto-refresh the Token if needed.
 	 *
-	 * @param  string $callback - the class method to reattempt.
+	 * @param  string $callback - the function/method to reattempt.
 	 * @param  string $param - The parameter to relay to the callback method.
-	 * @throws \Exception $e
+	 * @throws  \HelpScout\Api\Exception\AuthenticationException $e
 	 */
 	public function auto_refresh_token( $callback, $param ) {
 
@@ -258,9 +298,9 @@ abstract class AbstractAPI extends AbstractApp {
 
 			try {
 
-				$this->$callback( $param );
+				call_user_func( $callback, $param );
 
-			} catch ( \Exception $e ) {
+			} catch ( \HelpScout\Api\Exception\AuthenticationException $e ) {
 
 				// We've retried this and it's still not working.
 				if ( $retry ) {
@@ -268,9 +308,23 @@ abstract class AbstractAPI extends AbstractApp {
 					throw new \Exception( $e->getMessage() );
 					// Refresh and retry this one time.
 				} else {
-					self::refresh_token();
+					$this->refresh_token();
 					$retry = true;
 				}
+			} catch ( \HelpScout\Api\Exception\ValidationErrorException $e ) {
+
+				// Something is janky with the API.
+				$message  = $e->getError()->getMessage() . '</br>';
+				$message .= 'logRef: ' . $e->getError()->getLogRef() . '</br>';
+
+				$errors = $e->getError()->getErrors();
+				$message .= 'errors : ';
+				foreach ( $errors as $err ) {
+					$message .= ' | ' . $err->getMessage();
+				}
+				
+				throw new \Exception( $message );
+
 			}
 		} while ( $retry );
 
@@ -279,49 +333,18 @@ abstract class AbstractAPI extends AbstractApp {
 	/**
 	 * Refresh the token.
 	 *
-	 * @param  string $client_id
-	 * @param  string $client_secret
-	 * @param  string $refresh_token
+	 * @param  string $client_id - ignored here since we're using their API wrappers.
+	 * @param  string $client_secret - ignored here since we're using their API wrappers.
+	 * @param  string $refresh_token - ignored here since we're using their API wrappers.
 	 * @return string
 	 *
 	 * @param  string $html - The original email message.
 	 */
-	public function refresh_token( $client_id, $client_secret, $refresh_token ) {
-
-		$access_token = '';
-
-		$result = wp_remote_post(
-			self::TOKENURL,
-			array(
-				'body' => array(
-					'client_id'     => $client_id,
-					'client_secret' => $client_secret,
-					'refresh_token' => $refresh,
-					'grant_type'    => 'refresh_token',
-				),
-			)
-		);
-
-		if ( ! is_wp_error( $result ) ) {
-
-			$json = json_decode( wp_remote_retrieve_body( $result ), true );
-
-			if ( ! empty( $json['access_token'] ) ) {
-				$access_token = wp_unslash( $json['access_token'] );
-
-				$this->set_settings(
-					array(
-						$this->get_prefix() . '_token' => sanitize_text_field( $access_token ),
-					)
-				);
-
-			}
-		}
-
-		return $access_token;
-
+	public function refresh_token( $client_id = '', $client_secret = '', $refresh_token = '' ) {
+		$this->get_client()->getAuthenticator()->fetchAccessAndrefresh_token();
+		$accessToken = $this->get_client()->getAuthenticator()->fetchAccessAndrefresh_token()->accessToken();
+		App::instance()->set_settings( array( 'access_token' => $accessToken ) );
 	}
-
 
 	/*
 	-----------------------------------------------------------------------------------*/

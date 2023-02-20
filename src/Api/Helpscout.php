@@ -16,7 +16,6 @@ use Woo3pdHelpscout\Api\Abstracts\AbstractAPI;
 use Woo3pdHelpscout\Parser\Parse;
 use Woo3pdHelpscout\Exceptions\QuietException;
 
-use HelpScout\Api\ApiClientFactory;
 use HelpScout\Api\Webhooks\IncomingWebhook;
 use HelpScout\Api\Mailboxes\MailboxRequest;
 use HelpScout\Api\Conversations\Conversation;
@@ -38,11 +37,6 @@ class Helpscout extends AbstractAPI {
 	 * @var string
 	 */
 	protected $id = 'helpscout';
-
-	/**
-	 * @var obj HelpScout\Api\ApiClient
-	 */
-	private $client;
 
 	/**
 	 * Additional settings.
@@ -113,98 +107,6 @@ class Helpscout extends AbstractAPI {
 	}
 
 	/**
-	 * Authenticate with the Helpscout API.
-	 */
-	public function get_client() {
-
-		// Initialize API Client
-		if ( empty( $this->client ) ) {
-
-			$appId       = $this->get_setting( 'client_id' );
-			$appSecret   = $this->get_setting( 'client_secret' );
-			$accessToken = $this->get_setting( 'access_token' );
-
-			$accessToken = '';
-
-			if ( $appId && $appSecret ) {
-				$this->client = ApiClientFactory::createClient();
-				$this->client = $this->client->useClientCredentials( $appId, $appSecret );
-			} else {
-				throw new \Exception( 'No tokens saved in settings.' );
-			}
-
-			if ( $this->client && $accessToken ) {
-				$this->client->setAccessToken( $accessToken );
-			}
-		}
-
-		return $this->client;
-
-	}
-
-	/**
-	 * Refresh the token.
-	 *
-	 * @param  string $client_id - ignored here since we're using their API wrappers.
-	 * @param  string $client_secret - ignored here since we're using their API wrappers.
-	 * @param  string $refresh_token - ignored here since we're using their API wrappers.
-	 * @return string
-	 *
-	 * @param  string $html - The original email message.
-	 */
-	public function refresh_token( $client_id = '', $client_secret = '', $refresh_token = '' ) {
-		$this->get_client()->getAuthenticator()->fetchAccessAndrefresh_token();
-		$accessToken = $this->get_client()->getAuthenticator()->fetchAccessAndrefresh_token()->accessToken();
-		App::instance()->set_settings( array( 'access_token' => $accessToken ) );
-	}
-
-
-	/**
-	 * Auto-refresh the Token if needed.
-	 *
-	 * @param  string $callback - the function/method to reattempt.
-	 * @param  string $param - The parameter to relay to the callback method.
-	 * @throws  \HelpScout\Api\Exception\AuthenticationException $e
-	 */
-	public function auto_refresh_token( $callback, $param ) {
-
-		$retry = false;
-
-		do {
-
-			try {
-
-				call_user_func( $callback, $param );
-
-			} catch ( \HelpScout\Api\Exception\AuthenticationException $e ) {
-
-				// We've retried this and it's still not working.
-				if ( $retry ) {
-					$retry = false;
-					throw new \Exception( $e->getMessage() );
-					// Refresh and retry this one time.
-				} else {
-					$this->refresh_token();
-					$retry = true;
-				}
-			} catch ( \HelpScout\Api\Exception\ValidationErrorException $e ) {
-
-				// Something is janky with the API.
-				$message  = $e->getError()->getMessage() . '</br>';
-				$message .= 'logRef: ' . $e->getError()->getLogRef() . '</br>';
-
-				$errors = $e->getError()->getErrors();
-				$message .= 'errors : ';
-				foreach ( $errors as $err ) {
-					$message .= ' | ' . $err->getMessage();
-				}
-				
-				throw new \Exception( $message );
-
-			}
-		} while ( $retry );
-
-	}
 
 	/**
 	 * Create a new conversation.
