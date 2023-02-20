@@ -49,23 +49,6 @@ class Helpscout extends AbstractAPI {
 	);
 
 	/**
-	 * The data parsed fom the Woo email.
-	 * The translated values need to match the custom fields set up in HelpScout.
-	 *
-	 * @var array
-	 */
-	public $customFields = array(
-		'customerName'        => '',
-		'website'             => '',
-		'subscriptionStarted' => '',
-		'subscriptionEnds'    => '',
-		'wcVersion'           => '',
-		'plugin_version'      => '',
-		'phpVersion'          => '',
-		'wpdotcom'            => '',
-	);
-
-	/**
 	 * Handle the webhook.
 	 */
 	public function handle_webhook() {
@@ -269,73 +252,6 @@ class Helpscout extends AbstractAPI {
 
 		$client->threads()->updateText( $conversation_id, $thread_id, $updatedText );
 
-	}
-
-	/**
-	 * Get custom fields translated.
-	 *
-	 * @return array
-	 */
-	private function get_translated_custom_fields() {
-
-		$locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
-
-		//delete_transient( 'woo3pd_helpscout_translated_custom_fields-' . $locale );
-
-		$fields = get_transient( 'woo3pd_helpscout_translated_custom_fields-' . $locale );
-
-		if ( false === $fields ) {
-
-			$fields = array(
-				'customer_name'        => __( 'Customer Name', 'woo3pdhelpscout' ),
-				'website'              => __( 'Website', 'woo3pdhelpscout' ),
-				'subscription_started' => __( 'Subscription Started', 'woo3pdhelpscout' ),
-				'subscription_ends'    => __( 'Subscription Ends', 'woo3pdhelpscout' ),
-				'wc_version'           => __( 'WC Version', 'woo3pdhelpscout' ),
-				'version'              => __( 'Version', 'woo3pdhelpscout' ),
-				'php_version'          => __( 'PHP Version', 'woo3pdhelpscout' ),
-				'connected'            => __( 'Connected to WooCommerce.com', 'woo3pdhelpscout' ),
-				'wpdotcom'             => __( 'Hosted at WordPress.com', 'woo3pdhelpscout' ),
-			);
-
-			set_transient( 'woo3pd_helpscout_translated_custom_fields-' . $locale, $fields, 24 * HOUR_IN_SECONDS );
-
-		}
-
-		return $fields;
-	}
-
-	/**
-	 * Get custom fields for a particular Mailbox.
-	 *
-	 * @param  string $mailbox_id
-	 * @param  array $ticket_data
-	 * @return []CustomField
-	 */
-	private function get_custom_fields( $mailbox_id, $ticket_data ) {
-
-		$custom_fields = array();
-
-		$mailbox_request = new MailboxRequest( array( 'fields' ) );
-		$mailbox         = $this->get_client()->mailboxes()->get( $mailbox_id, $mailbox_request );
-		$mailbox_fields  = $mailbox->getFields();
-
-		if ( ! empty( $mailbox_fields ) && ! empty( $this->get_translated_custom_fields() ) ) {
-
-			foreach ( $mailbox_fields as $field ) {
-
-				$key = array_search( $field->getName(), $this->get_translated_custom_fields() );
-
-				if ( false !== $key && isset( $ticket_data[ $key ] ) ) {
-					$custom_field = new CustomField();
-					$custom_field->setId( $field->getId() );
-					$custom_field->setValue( $ticket_data[ $key ] );
-					$custom_fields[] = $custom_field;
-				}
-			}
-		}
-
-		return $custom_fields;
 	}
 
 }
