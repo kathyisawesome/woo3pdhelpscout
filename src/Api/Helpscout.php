@@ -79,7 +79,7 @@ class Helpscout extends AbstractAPI {
 		sleep( 10 );
 
 		$webhook = $this->get_payload();
-		$this->auto_refresh_token( 'update_conversation', $webhook );
+		$this->auto_refresh_token( [ $this, 'update_conversation' ], $webhook );
 	}
 
 	/**
@@ -162,7 +162,7 @@ class Helpscout extends AbstractAPI {
 	/**
 	 * Auto-refresh the Token if needed.
 	 *
-	 * @param  string $callback - the class method to reattempt.
+	 * @param  string $callback - the function/method to reattempt.
 	 * @param  string $param - The parameter to relay to the callback method.
 	 * @throws  \HelpScout\Api\Exception\AuthenticationException $e
 	 */
@@ -174,7 +174,7 @@ class Helpscout extends AbstractAPI {
 
 			try {
 
-				$this->$callback( $param );
+				call_user_func( $callback, $param );
 
 			} catch ( \HelpScout\Api\Exception\AuthenticationException $e ) {
 

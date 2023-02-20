@@ -95,7 +95,7 @@ abstract class AbstractAPI extends AbstractApp {
 	 */
 	public function handle_webhook() {
 		$html = $this->get_payload();
-		Helpscout::instance()->auto_refresh_token( 'new_conversation', $html );
+		Helpscout::instance()->auto_refresh_token( [ $this, 'new_conversation' ], $html );
 	}
 
 	/**
