@@ -2,7 +2,12 @@
 	"autoload": {
         "psr-4": {"Woo3pdHelpscout\\": "src/"}
     },
-    "require": {
-        "helpscout/api": "^2.6"
-    }
+	"config": {
+		"platform": {
+		  "php": "8.0.23"
+		}
+	},
+	"require": {
+		"helpscout/api": "^3.0"
+	}
 }
