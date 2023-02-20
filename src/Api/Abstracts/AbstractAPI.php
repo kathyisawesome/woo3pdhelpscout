@@ -102,7 +102,7 @@ abstract class AbstractAPI extends AbstractApp {
 	}
 
 	/**
-	 * Get the support email's HTML.
+	 * Get the support email's HTML. - Must be extended by each API.
 	 *
 	 * @return string
 	 */
@@ -111,13 +111,12 @@ abstract class AbstractAPI extends AbstractApp {
 	}
 
 	/**
-	 * Handle the webhook.
+	 * Handle the webhook. - Must be extended by each API.
 	 *
 	 * @return  string $html
 	 */
 	public function handle_webhook() {
-		$html = $this->get_payload();
-		Helpscout::instance()->auto_refresh_token( [ $this, 'new_conversation' ], $html );
+		return false;
 	}
 
 	/**
