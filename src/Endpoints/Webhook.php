@@ -39,10 +39,7 @@ class Webhook extends AbstractApp {
 	public function process_webhook() {
 
 		try {
-
-			// Give HS itself some time to process customers first.
-			sleep( 10 );
-
+			
 			$provider = App::instance()->get_api();
 
 			$api = App::instance()->get_api_instance( $provider );

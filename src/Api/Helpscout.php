@@ -74,6 +74,9 @@ class Helpscout extends AbstractAPI {
 	 * Handle the webhook.
 	 */
 	public function handle_webhook() {
+		// Give HS itself some time to process customers first.
+		sleep( 10 );
+
 		$webhook = $this->get_payload();
 		$this->auto_refresh_token( 'update_conversation', $webhook );
 	}
