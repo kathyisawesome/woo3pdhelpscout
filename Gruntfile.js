@@ -42,9 +42,6 @@ module.exports = function(grunt) {
 				'!deploy.sh',
 				'!**/*~',
 				'!phpcs.xml',
-				'!composer.json',
-				'!composer.lock',
-				'!vendor/**',
 				'!none',
 				'!includes/compatibility/backcompatibility/**'
 				],
