@@ -39,10 +39,8 @@ class Webhook extends AbstractApp {
 	public function process_webhook() {
 
 		try {
-			
-			$provider = App::instance()->get_api();
 
-			$api = App::instance()->get_api_instance( $provider );
+			$api = App::instance()->get_api_instance();
 			$api->handle_webhook();
 
 		} catch ( QuietException $e ) {
