@@ -152,9 +152,13 @@ class Helpscout extends AbstractAPI {
 		/**
 		 * Tags
 		 */
+		$tags = ['api']; // Always set an api tag to identify something we parsed.
+
 		if ( ! empty( $ticket_data['product_tag'] ) ) {
-			$client->conversations()->updateTags( $conversation_id, array( $ticket_data['product_tag'] ) );
+			$tags[] = $ticket_data['product_tag'];
 		}
+
+		$client->conversations()->updateTags( $conversation_id, $tags );
 
 		/**
 		 * Custom Fields
