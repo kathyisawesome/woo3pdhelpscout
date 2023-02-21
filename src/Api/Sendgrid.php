@@ -13,6 +13,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Woo3pdHelpscout\App;
 use Woo3pdHelpscout\Api\Abstracts\AbstractAPI;
+use Woo3pdHelpscout\Parser\Parse;
+use Woo3pdHelpscout\Exceptions\QuietException;
+
+use HelpScout\Api\Webhooks\IncomingWebhook;
+use HelpScout\Api\Conversations\Conversation;
+use HelpScout\Api\Conversations\Threads\NoteThread;
+use HelpScout\Api\Conversations\Threads\CustomerThread;
+use HelpScout\Api\Conversations\CustomField;
+use HelpScout\Api\Customers\Customer;
+use HelpScout\Api\Tags\Tag;
+use HelpScout\Api\Entity\Collection;
 
 /**
  * HelpscoutApi class.
@@ -35,40 +46,28 @@ class Sendgrid extends AbstractAPI {
 
 
 	/**
-	 * Get the body of the Email from the Webhook.
+	 * Get the webhook payload.
 	 *
-	 * @return  string - the body of the email.
+	 * @return  array - the $_POSTed data.
 	 */
 	public function get_payload() {
-
-		$html = '';
-
-		if ( ! empty( $_POST ) && isset( $_POST['html'] ) ) {
-			$html = $_POST['html'];
-		}
-
-		return $html;
-
+		return json_decode(file_get_contents('php://input'), true);
 	}
 
 	/**
 	 * Handle the webhook.
-	 *
-	 * @return  string $html
 	 */
 	public function handle_webhook() {
-		$html = $this->get_payload();
-		Helpscout::instance()->auto_refresh_token( [ $this, 'new_conversation' ], $html );
+		$payload = $this->get_payload();
+		$this->auto_refresh_token( [ $this, 'new_conversation' ], $payload );
 	}
-
-
 
 	/**
 	 * Create a new conversation.
 	 *
-	 * @param  string $html - The original email message.
+	 * @param  array $payload - The original data.
 	 */
-	public function new_conversation( $html ) {
+	public function new_conversation( $payload ) {
 
 		$client     = $this->get_client();
 		$mailbox_id = $this->get_setting( 'mailbox_id' );
@@ -77,21 +76,43 @@ class Sendgrid extends AbstractAPI {
 			throw new \Exception( 'Missing mailbox id' );
 		}
 
-		$ticket_data = Parse::instance()->parse_woo_email( $html );
+		if ( ! isset( $payload['html'] ) ) {
+			throw new \Exception( 'Missing email message content' );
+		}
+
+		$parsed_customer = Parse::instance()->parseEmailAddress($payload['from']);
+
+		// Build basic ticket variables from email.
+		$customer_first = $parsed_customer['first'];
+		$customer_last  = $parsed_customer['last'];
+		$customer_email = $parsed_customer['email'];
+
+		$ticket_subject = isset( $payload['subject'] ) ? $payload['subject'] : '';
+		$ticket_message = isset( $payload['html'] ) ? $payload['html'] : '';
+
+		$ticket_data = Parse::instance()->parse_woo_email( $payload['html'] );
+
+		// Update variables if we can parse anything out of the ticket.
+		if ( ! empty( $ticket_data['customer']['first_name'] ) ) {
+			$customer_first = substr( $ticket_data['customer']['first_name'], 0, 40 );
+		}
+
+		if ( ! empty( $ticket_data['customer']['last_name'] ) ) {
+			$customer_last = substr( $ticket_data['customer']['last_name'], 0, 40 );
+		}
+
+		if ( ! empty( $ticket_data['customer']['email'] ) ) {
+			$customer_email = $ticket_data['customer']['email'];
+		}
 
 		/**
 		 * Customer
 		 */
 		$customer = new Customer();
-		if ( '' !== $ticket_data['customer']['first_name'] ) {
-			$customer->setFirstName( substr( $ticket_data['customer']['first_name'], 0, 40 ) );
-		}
-		
-		if ( '' !== $ticket_data['customer']['first_name'] ) {
-			$customer->setLastName( substr( $ticket_data['customer']['last_name'], 0, 40 ) );
-		}
-		
-		$customer->addEmail( $ticket_data['customer']['email'], 'work' );
+
+		$customer->setFirstName( $customer_first );
+		$customer->setLastName( $customer_last );
+		$customer->addEmail( $customer_email, 'work' );
 
 		/**
 		 * Threads
@@ -99,21 +120,37 @@ class Sendgrid extends AbstractAPI {
 		$threads = array();
 
 		// System status as note.
-		$noteThread = new NoteThread();
-		$noteThread->setText( '<pre>' . $ticket_data['status'] . '</pre>' );
-		$threads[] = $noteThread;
+		if ( ! empty( $ticket_data['status'] ) ) {
+			$noteThread = new NoteThread();
+			$noteThread->setText( '<pre>' . $ticket_data['status'] . '</pre>' );
+			$threads[] = $noteThread;
+		}
 
-		// Clients question to separate thread.
+		// Customer question to separate thread.
+		if ( ! empty( $ticket_data['description'] ) ) {
+			$ticket_message = $ticket_data['description'];
+		}
+
 		$customerThread = new CustomerThread();
 		$customerThread->setCustomer( $customer );
-		$customerThread->setText( $ticket_data['description'] );
+		$customerThread->setText( $ticket_message );
 		$threads[] = $customerThread;
 
 		/**
 		 * Tags
 		 */
-		$tag = new Tag();
-		$tag->setName( $ticket_data['product_tag'] );
+		$tags = [];
+
+		$apiTag = new Tag();
+		$apiTag->setName( 'api' ); // Always set an api tag to identify something we parsed.
+
+		$tags[] = $apiTag;
+
+		if ( isset( $ticket_data['product_tag'] ) ) {
+			$productTag = new Tag();
+			$productTag>setName( $ticket_data['product_tag'] );
+			$tags[] = $productTag;
+		}
 
 		/**
 		 * Custom Fields
@@ -124,19 +161,18 @@ class Sendgrid extends AbstractAPI {
 		 * Build the new conversation.
 		 */
 		$conversation = new Conversation();
-		$conversation->setSubject( $ticket_data['subject'] );
+		$conversation->setSubject( $ticket_subject );
 		$conversation->setStatus( 'active' );
 		$conversation->setType( 'email' );
 		$conversation->setMailboxId( $mailbox_id );
 		$conversation->setCustomer( $customer );
 		$conversation->setThreads( new Collection( $threads ) );
-		$conversation->addTag( $tag );
+		$conversation->setTags( new Collection( $tags ) );
 		$conversation->setCustomFields( new Collection( $customFields ) );
 
 		// Create the new conversation.
 		$new_conversation_id = $client->conversations()->create( $conversation );
 
 	}
-
 
 }
