@@ -77,17 +77,11 @@ class Parse extends AbstractAPI {
 
 		// Stash full name as it's own key for custom fields.
 		$ticket_data['customer_name'] = $ticket_data['customer']['full_name'];
+		// Attempt to split name into first/last.
+		$names = $this->parseNames( $ticket_data['customer_name'] );
 
-		if ( empty( $ticket_data['customer']['full_name'] ) ) {
-			$ticket_data['customer']['full_name'] = 'Undefined';
-		}
-
-		$name = explode( ' ', $ticket_data['customer']['full_name'] );
-
-		$ticket_data['customer']['first_name'] = $name[0];
-		if ( 2 === sizeof( $name ) ) {
-			$ticket_data['customer']['last_name'] = $name[1];
-		}
+		$ticket_data['customer']['first_name'] = $names['first'];
+		$ticket_data['customer']['last_name']  = $names['last'];
 
 		// WooCommerce plugin version.
 		if ( preg_match( '/WC Version: ([A-Za-z0-9\.\-]+)/i', $ticket_data['status'], $wc_version_matches ) ) {
@@ -129,6 +123,82 @@ class Parse extends AbstractAPI {
 		$product_name = preg_replace( '/[\s_]/', '-', $product_name );
 		$product_name = str_replace( 'woocommerce-', '', $product_name );
 		return $product_name;
+	}
+
+	/*
+	-----------------------------------------------------------------------------------*/
+	/*
+	 Formatting Functions */
+	/*-----------------------------------------------------------------------------------*/
+
+
+	/**
+	 * Parse email address and name out of text.
+	 *
+	 * @param  string $raw - The full email address.
+	 * 
+	 * @return array {
+	 *     Associative array email|name properties.
+	 *
+	 *     @type string $first_name First name
+	 *     @type string $last_name  Optional - Last Name if the full name can be split into 2 sections.
+	 *     @type string $email Just the email part.
+	 * 	   @type string $full Combined name plus email, ex: Diana Prince <dprince@amazonia.net>
+	 * }
+	 */
+	public function parseEmailAddress($raw) {
+		$full_name = '';
+		$email = trim($raw, " '\"");
+		if (preg_match("/^(.*)<(.*)>.*$/", $raw, $matches)) {
+			array_shift($matches);
+			$full_name = trim($matches[0], " '\"");
+			$email     = trim($matches[1], " '\"");
+		}
+
+		return array_merge(
+			$this->parseNames($full_name),
+			array( 
+				'email'      => $email,
+				'full'       => $full_name . " <" . $email . ">",
+			),
+		); 
+	}
+
+	/**
+	 * Parse multiple email addresses out of webhook.
+	 *
+	 * @param  string $raw - Multiple email addresses.
+	 */
+	public function parseEmailAddresses($raw) {
+		$arr = array();
+		foreach(explode(",", $raw) as $email)
+			$arr[] = $this->parseEmailAddress($email);
+		return $arr;
+	} 
+
+	/**
+	 * Parse first and last names out of full name.
+	 *
+	 * @param  string $raw - The full name.
+	 * 
+	 * @return array {
+	 *     Associative array name properties.
+	 *
+	 *     @type string $first First name
+	 *     @type string $last  Optional - Last Name if the full name can be split into multiple sections.
+	 * }
+	 */
+	public function parseNames($raw) {
+
+		// Guess at first/last names without losing any pieces.
+		$names = explode( ' ', $raw );
+		$first = ! empty( $names ) ? array_shift( $names ): $raw; // We take a single split as first name.
+		$last  = 1 < sizeof( $names ) ? implode( ' ', $names ) : ''; // And everything else is the last name. 
+
+		return array(
+			'first' => $first,
+			'last'  => $last,
+		); 
 	}
 
 }
