@@ -22,10 +22,7 @@ use HelpScout\Api\Conversations\Threads\NoteThread;
 use HelpScout\Api\Conversations\Threads\CustomerThread;
 use HelpScout\Api\Conversations\CustomField;
 use HelpScout\Api\Customers\Customer;
-use HelpScout\Api\Customers\CustomerFilters;
 use HelpScout\Api\Tags\Tag;
-use HelpScout\Api\Entity\Collection;
-use HelpScout\Api\Entity\PagedCollection;
 
 /**
  * HelpscoutApi class.
@@ -59,7 +56,7 @@ class Helpscout extends AbstractAPI {
 	}
 
 	/**
-	 * Get the body of the Email from the Webhook.
+	 * Get the data from the Webhook.
 	 *
 	 * @return obj $webhook \Helpscout\API\Webhook
 	 */
@@ -72,8 +69,6 @@ class Helpscout extends AbstractAPI {
 		try {
 
 			$webhook = IncomingWebhook::makeFromGlobals( $secretKey );
-
-			// $html = file_get_contents( __DIR__ . '/webhook-payload.json');
 
 		} catch ( \HelpScout\Api\Exception\InvalidSignatureException $e ) {
 
