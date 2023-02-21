@@ -63,6 +63,7 @@ class Parse extends AbstractAPI {
 				'last_name'  => '',
 				'email'      => $customer_email_node ? $customer_email_node->textContent : '',
 			),
+			'customer_name'        => $customer_name_node ? $customer_name_node->textContent : '', // Stash full name for custom fields.
 			'subscription_started' => $subscription_started_node ? $subscription_started_node->textContent : '',
 			'subscription_ends'    => $subscription_ends_node ? $subscription_ends_node->textContent : '',
 			'website'              => $website_node ? esc_url_raw( $website_node->textContent ) : '',
@@ -75,8 +76,6 @@ class Parse extends AbstractAPI {
 			'wpdotcom'             => '',
 		);
 
-		// Stash full name as it's own key for custom fields.
-		$ticket_data['customer_name'] = $ticket_data['customer']['full_name'];
 		// Attempt to split name into first/last.
 		$names = $this->parseNames( $ticket_data['customer_name'] );
 
