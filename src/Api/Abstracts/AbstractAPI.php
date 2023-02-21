@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Woo3pdHelpscout\App;
 use Woo3pdHelpscout\AbstractApp;
 use HelpScout\Api\ApiClientFactory;
+use HelpScout\Api\Mailboxes\MailboxRequest;
 
 /**
  * API class.
