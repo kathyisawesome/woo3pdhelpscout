@@ -14,6 +14,7 @@ use Woo3pdHelpscout\App;
 use Woo3pdHelpscout\AbstractApp;
 use HelpScout\Api\ApiClientFactory;
 use HelpScout\Api\Mailboxes\MailboxRequest;
+use HelpScout\Api\Conversations\CustomField;
 
 /**
  * API class.
