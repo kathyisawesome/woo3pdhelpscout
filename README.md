@@ -45,4 +45,8 @@ Inbound Parse means that SendGrid will be the MX record for all emails to a subd
 
 1. Clone the plugin.
 2. In the plugin's folder, run `composer install --no-dev` to install only required dependencies.
+
+Alternatively, you can |[Download latest release](https://github.com/kathyisawesome/woocommerce-mix-and-match-products/releases/latest)|
+|---|
+
 3. Activate the plugin and go to `Settings > Woo3pd Helpscout` to choose service and enter settings.
