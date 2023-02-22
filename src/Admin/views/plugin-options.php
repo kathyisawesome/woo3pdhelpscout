@@ -74,13 +74,13 @@ use Woo3pdHelpscout\Api\Sendgrid;
 			<tr>
 				<th scope="row"><label for="hs_client_secret"><?php esc_html_e( 'Helpscout App Secret', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
-					<input type="text" id="hs_client_secret" class="regular-text" name="woo3pd_helpscout[helpscout][client_secret]" value="<?php echo esc_attr( $hs_client_secret ); ?>" />
+					<input type="password" id="hs_client_secret" class="regular-text" name="woo3pd_helpscout[helpscout][client_secret]" value="<?php echo esc_attr( $hs_client_secret ); ?>" />
 				</td>
 			</tr>
 			<tr class="toggle-api show-if-helpscout" <?php echo 'helpscout' !== $current_api ? 'style="display:none"' : ''; ?> >
 				<th scope="row"><label for="hs_secret_key"><?php esc_html_e( 'Helpscout Webhook Secret Key', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
-					<input type="text" id="hs_secret_key" class="regular-text" name="woo3pd_helpscout[helpscout][secret_key]" value="<?php echo esc_attr( $hs_secret_key ); ?>" />
+					<input type="password" id="hs_secret_key" class="regular-text" name="woo3pd_helpscout[helpscout][secret_key]" value="<?php echo esc_attr( $hs_secret_key ); ?>" />
 				</td>
 			</tr>
 
@@ -100,7 +100,7 @@ use Woo3pdHelpscout\Api\Sendgrid;
 			<tr class="toggle-api show-if-sendgrid" <?php echo 'sendgrid' !== $current_api ? 'style="display:none"' : ''; ?> >
 				<th scope="row"><label for="sendgrid_secret_key"><?php esc_html_e( 'SendGrid Webhook Secret Key', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
-					<input type="text" id="sendgrid_secret_key" class="regular-text" name="woo3pd_helpscout[sendgrid][secret_key]" value="<?php echo esc_attr( $sg_secret_key ); ?>" />
+					<input type="password" id="sendgrid_secret_key" class="regular-text" name="woo3pd_helpscout[sendgrid][secret_key]" value="<?php echo esc_attr( $sg_secret_key ); ?>" />
 				</td>
 			</tr>
 
