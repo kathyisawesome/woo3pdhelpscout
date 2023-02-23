@@ -77,7 +77,7 @@ class Sendgrid extends AbstractAPI {
 			throw new \Exception( 'Missing mailbox id' );
 		}
 
-		if ( ! isset( $payload['html'] ) ) {
+		if ( empty( $payload['html'] ) && empty( $payload['text'] ) ) {
 			throw new \Exception( 'Missing email message content' );
 		}
 
@@ -91,7 +91,12 @@ class Sendgrid extends AbstractAPI {
 		$ticket_subject = isset( $payload['subject'] ) ? $payload['subject'] : '';
 		$ticket_message = isset( $payload['html'] ) ? $payload['html'] : '';
 
-		$ticket_data = Parse::instance()->parse_woo_email( $payload['html'] );
+		// Fallback to non-html message.
+		if ( ! $ticket_message ) {
+			$ticket_message = isset( $payload['text'] ) ? $payload['text'] : '';
+		}
+
+		$ticket_data = Parse::instance()->parse_woo_email( $ticket_message );
 
 		// Update variables if we can parse anything out of the ticket.
 		if ( ! empty( $ticket_data['customer']['first_name'] ) ) {
