@@ -68,7 +68,7 @@ class Sendgrid extends AbstractAPI {
 	public function new_conversation( $payload ) {
 
 		//	$client     = $this->get_client();
-		$mailbox_id = App::instance()->get_setting( 'mailbox_id' );
+		$mailbox_id = intval( App::instance()->get_setting( 'mailbox_id' ) );
 		$api_key    = $this->get_setting( 'api_key' );
 		
 		if ( ! $mailbox_id ) {
