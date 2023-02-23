@@ -16,7 +16,6 @@ use Woo3pdHelpscout\Api\Abstracts\AbstractAPI;
 use Woo3pdHelpscout\Parser\Parse;
 use Woo3pdHelpscout\Exceptions\QuietException;
 
-use HelpScout\Api\Webhooks\IncomingWebhook;
 use HelpScout\Api\Conversations\Conversation;
 use HelpScout\Api\Conversations\Threads\NoteThread;
 use HelpScout\Api\Conversations\Threads\CustomerThread;
