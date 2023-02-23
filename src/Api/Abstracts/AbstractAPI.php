@@ -403,26 +403,31 @@ abstract class AbstractAPI extends AbstractApp {
 	 */
 	protected function get_custom_fields( $mailbox_id, $ticket_data ) {
 
-		$custom_fields = array();
+		$custom_fields = [];
 
-		$request = (new MailboxRequest)->withFields();
+		// If there was no discernable product tag, we probably don't have a new form submission so unlikely to get much out of the custom field info.
+		if ( ! empty( $ticket_data['product_tag'] ) ) {
 
-		$mailbox         = $this->get_client()->mailboxes()->get( intval( $mailbox_id ), $request );
-		$mailbox_fields  = $mailbox->getFields();
+			$request = (new MailboxRequest)->withFields();
 
-		if ( ! empty( $mailbox_fields ) && ! empty( $this->get_translated_custom_fields() ) ) {
+			$mailbox         = $this->get_client()->mailboxes()->get( intval( $mailbox_id ), $request );
+			$mailbox_fields  = $mailbox->getFields();
 
-			foreach ( $mailbox_fields as $field ) {
+			if ( ! empty( $mailbox_fields ) && ! empty( $this->get_translated_custom_fields() ) ) {
 
-				$key = array_search( $field->getName(), $this->get_translated_custom_fields() );
+				foreach ( $mailbox_fields as $field ) {
 
-				if ( false !== $key && isset( $ticket_data[ $key ] ) ) {
-					$custom_field = new CustomField();
-					$custom_field->setId( $field->getId() );
-					$custom_field->setValue( $ticket_data[ $key ] );
-					$custom_fields[] = $custom_field;
+					$key = array_search( $field->getName(), $this->get_translated_custom_fields() );
+
+					if ( false !== $key && isset( $ticket_data[ $key ] ) ) {
+						$custom_field = new CustomField();
+						$custom_field->setId( $field->getId() );
+						$custom_field->setValue( $ticket_data[ $key ] );
+						$custom_fields[] = $custom_field;
+					}
 				}
 			}
+
 		}
 
 		return $custom_fields;
