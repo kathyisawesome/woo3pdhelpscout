@@ -1,7 +1,7 @@
 {
   "title": "Woo3pdHelpscout - HelpScout Integration for WooCommerce 3pd Support",
   "name": "woo3pdhelpscout",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-beta.1",
   "description": "Parse WooCommerce.com support emails into HelpScout conversations",
   "main": "Gruntfile.js",
   "license": "GPL-3.0",
