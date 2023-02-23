@@ -121,7 +121,7 @@ class Sendgrid extends AbstractAPI {
 		/**
 		 * Threads
 		 */
-		$threads = array();
+		$threads = [];
 
 		// System status as note.
 		if ( ! empty( $ticket_data['status'] ) ) {
@@ -143,7 +143,8 @@ class Sendgrid extends AbstractAPI {
 		/**
 		 * Tags
 		 */
-		if ( isset( $ticket_data['product_tag'] ) ) {
+		$tags = [];
+		if ( ! empty( $ticket_data['product_tag'] ) ) {
 			$apiTag = new Tag();
 			$apiTag->setName( 'api' ); // Always set an api tag to identify something we parsed.
 
@@ -167,9 +168,18 @@ class Sendgrid extends AbstractAPI {
 		$conversation->setType( 'email' );
 		$conversation->setMailboxId( $mailbox_id );
 		$conversation->setCustomer( $customer );
-		$conversation->setThreads( new Collection( $threads ) );
-		$conversation->setTags( new Collection( $tags ) );
-		$conversation->setCustomFields( new Collection( $customFields ) );
+
+		if ( ! empty( $threads ) ) {
+		    $conversation->setThreads( new Collection( $threads ) );
+		}
+		
+		if ( ! empty( $tags ) ) {
+		    $conversation->setTags( new Collection( $tags ) );
+		}
+		
+		if ( ! empty( $customFields ) ) {
+		    $conversation->setCustomFields( new Collection( $customFields ) );
+		}
 
 		// Create the new conversation.
 		$new_conversation_id = $client->conversations()->create( $conversation );
