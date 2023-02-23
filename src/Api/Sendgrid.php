@@ -149,7 +149,7 @@ class Sendgrid extends AbstractAPI {
 			$apiTag->setName( 'api' ); // Always set an api tag to identify something we parsed.
 
 			$productTag = new Tag();
-			$productTag>setName( $ticket_data['product_tag'] );
+			$productTag->setName( $ticket_data['product_tag'] );
 			
 			$tags = [ $apiTag, $productTag ];
 		}
