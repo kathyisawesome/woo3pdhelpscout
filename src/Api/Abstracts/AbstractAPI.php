@@ -405,8 +405,9 @@ abstract class AbstractAPI extends AbstractApp {
 
 		$custom_fields = array();
 
-		$mailbox_request = new MailboxRequest( array( 'fields' ) );
-		$mailbox         = $this->get_client()->mailboxes()->get( $mailbox_id, $mailbox_request );
+		$request = (new MailboxRequest)->withFields();
+
+		$mailbox         = $this->get_client()->mailboxes()->get( intval( $mailbox_id ), $request );
 		$mailbox_fields  = $mailbox->getFields();
 
 		if ( ! empty( $mailbox_fields ) && ! empty( $this->get_translated_custom_fields() ) ) {
