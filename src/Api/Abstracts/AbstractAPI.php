@@ -325,14 +325,17 @@ abstract class AbstractAPI extends AbstractApp {
 				}
 			} catch ( \HelpScout\Api\Exception\ValidationErrorException $e ) {
 
-				// Something is janky with the API.
-				$message  = $e->getError()->getMessage() . '</br>';
-				$message .= 'logRef: ' . $e->getError()->getLogRef() . '</br>';
+				$error = $e->getError();
 
-				$errors = $e->getError()->getErrors();
-				$message .= 'errors : ';
+				// Something is janky with the API.
+				$message  = $error->getMessage() . "\n";
+				$message .= 'logRef: ' . $error->getLogRef() . "\n";
+
+				$errors = $error->getErrors();
+				$message .= "errors : \n";
+
 				foreach ( $errors as $err ) {
-					$message .= ' | ' . $err->getMessage();
+					$message .= ' | ' . $err->getPath() . ': ' . $err->getMessage() . "\n";
 				}
 				
 				throw new \Exception( $message );

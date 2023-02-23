@@ -50,3 +50,7 @@ Alternatively, you can |[Download latest release](https://github.com/kathyisawes
 |---|
 
 3. Activate the plugin and go to `Settings > Woo3pd Helpscout` to choose service and enter settings.
+
+## Minimum Environment
+
+1. Requires PHP **8.0**. Will accept a PR for 7.4 compat as the HelpScout API itself should be compatible down to 7.3.
