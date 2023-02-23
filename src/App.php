@@ -50,6 +50,19 @@ class App extends AbstractApp {
 	);
 
 	/**
+	 * Shared API default settings.
+	 *
+	 * @var array the DB settings for plugin.
+	 */
+	protected $api_settings = array(
+		'client_id'     => '',
+		'client_secret' => '',
+		'token'         => '',
+		'refresh'       => '',
+		'mailbox_id'    => '', // Currently only used by SendGrid, but in theory would be used by any vendor.
+	);
+
+	/**
 	 * The supported APIs.
 	 *
 	 * @var array
@@ -70,7 +83,7 @@ class App extends AbstractApp {
 	 * Woo3pdHelpscout constructor.
 	 */
 	public function __construct() {
-		$this->default_settings = array_merge( $this->default_settings, array_fill_keys( $this->apis, array() ) );
+		$this->default_settings = array_merge( $this->default_settings, $this->api_settings, array_fill_keys( $this->apis, array() ) );
 		$this->api              = $this->get_setting( 'api' );
 	}
 

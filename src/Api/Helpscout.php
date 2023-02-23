@@ -41,7 +41,6 @@ class Helpscout extends AbstractAPI {
 	 */
 	protected $extra_settings = array(
 		'secret_key' => '',
-		'mailbox_id' => '',
 	);
 
 	/**

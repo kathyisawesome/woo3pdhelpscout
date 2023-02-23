@@ -68,19 +68,14 @@ abstract class AbstractAPI extends AbstractApp {
 	 *
 	 * @var array the DB settings for this API.
 	 */
-	protected $extra_settings = array();
+	protected $extra_settings = [];
 
 	/**
 	 * Default settings.
 	 *
 	 * @var array the DB settings for this API.
 	 */
-	protected $default_settings = array(
-		'client_id'     => '',
-		'client_secret' => '',
-		'token'         => '',
-		'refresh'       => '',
-	);
+	protected $default_settings = [];
 
 	/**
 	 * @var string
@@ -279,11 +274,9 @@ abstract class AbstractAPI extends AbstractApp {
 		// Initialize API Client
 		if ( empty( $this->client ) ) {
 
-			$appId       = $this->get_setting( 'client_id' );
-			$appSecret   = $this->get_setting( 'client_secret' );
-			$accessToken = $this->get_setting( 'access_token' );
-
-			$accessToken = '';
+			$appId       = App::instance()->get_setting( 'client_id' );
+			$appSecret   = App::instance()->get_setting( 'client_secret' );
+			$accessToken = App::instance()->get_setting( 'access_token' );
 
 			if ( $appId && $appSecret ) {
 				$this->client = ApiClientFactory::createClient();
@@ -351,15 +344,8 @@ abstract class AbstractAPI extends AbstractApp {
 
 	/**
 	 * Refresh the token.
-	 *
-	 * @param  string $client_id - ignored here since we're using their API wrappers.
-	 * @param  string $client_secret - ignored here since we're using their API wrappers.
-	 * @param  string $refresh_token - ignored here since we're using their API wrappers.
-	 * @return string
-	 *
-	 * @param  string $html - The original email message.
 	 */
-	public function refresh_token( $client_id = '', $client_secret = '', $refresh_token = '' ) {
+	public function refresh_token() {
 		$this->get_client()->getAuthenticator()->fetchAccessAndrefresh_token();
 		$accessToken = $this->get_client()->getAuthenticator()->fetchAccessAndrefresh_token()->accessToken();
 		App::instance()->set_settings( array( 'access_token' => $accessToken ) );

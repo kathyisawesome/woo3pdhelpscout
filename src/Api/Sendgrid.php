@@ -41,9 +41,8 @@ class Sendgrid extends AbstractAPI {
 	 * @var array additional DB settings for this API.
 	 */
 	protected $extra_settings = array(
-		'secret_key' => '',
+		'api_key'    => '',
 	);
-
 
 	/**
 	 * Get the webhook payload.
@@ -51,7 +50,9 @@ class Sendgrid extends AbstractAPI {
 	 * @return  array - the $_POSTed data.
 	 */
 	public function get_payload() {
-		return json_decode(file_get_contents('php://input'), true);
+
+		return json_decode( file_get_contents( __DIR__ . '/sendgrid-payload.json') );
+		return ! empty ( $_POST ) ? $_POST : [];
 	}
 
 	/**
@@ -69,9 +70,10 @@ class Sendgrid extends AbstractAPI {
 	 */
 	public function new_conversation( $payload ) {
 
-		$client     = $this->get_client();
-		$mailbox_id = $this->get_setting( 'mailbox_id' );
-
+		//	$client     = $this->get_client();
+		$mailbox_id = App::instance()->get_setting( 'mailbox_id' );
+		$api_key    = $this->get_setting( 'api_key' );
+		
 		if ( ! $mailbox_id ) {
 			throw new \Exception( 'Missing mailbox id' );
 		}

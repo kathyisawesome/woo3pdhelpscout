@@ -44,6 +44,20 @@ abstract class AbstractApp {
 	protected $plugin_dir_url = '';
 
 	/**
+	 * Plugin settings.
+	 *
+	 * @var array the DB settings for plugin.
+	 */
+	protected $settings = [];
+
+	/**
+	 * Plugin default settings.
+	 *
+	 * @var array the DB settings for plugin.
+	 */
+	protected $default_settings = [];
+
+	/**
 	 * Plugin directory URL - filtered.
 	 * Need to use this instead of the class variable because 3rd party extensions (Polylang, etc.) might filter it.
 	 *
@@ -189,7 +203,7 @@ abstract class AbstractApp {
 		$result = false;
 
 		if ( ! empty( $settings ) && is_array( $settings ) ) {
-			$new_settings = array_intersect_key( $settings, $this->get_default_settings() );
+			$new_settings   = array_intersect_key( $settings, $this->get_default_settings() );
 			// $new_settings    = array_map( 'sanitize_text_field', $new_settings );
 			$this->settings = array_merge( $this->get_settings(), $new_settings );
 			$result         = update_option( static::OPTION, $this->settings );

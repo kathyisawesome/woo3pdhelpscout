@@ -15,12 +15,11 @@ use Woo3pdHelpscout\Api\Sendgrid;
 		<?php
 
 			$current_api      = App::instance()->get_setting( 'api' );
-			$hs_client_id     = Helpscout::instance()->get_setting( 'client_id' );
-			$hs_client_secret = Helpscout::instance()->get_setting( 'client_secret' );
+			$hs_client_id     = App::instance()->get_setting( 'client_id' );
+			$hs_client_secret = App::instance()->get_setting( 'client_secret' );
+			$hs_mailbox_id    = App::instance()->get_setting( 'mailbox_id' );
 			$hs_secret_key    = Helpscout::instance()->get_setting( 'secret_key' );
-			$hs_mailbox_id    = Helpscout::instance()->get_setting( 'mailbox_id' );
-
-			$sg_secret_key    = Sendgrid::instance()->get_setting( 'secret_key' );
+			$sg_api_key       = Sendgrid::instance()->get_setting( 'api_key' );
 
 			$debug            = App::instance()->get_setting( 'debug' );
 			$delete           = App::instance()->get_setting( 'delete' );
@@ -63,20 +62,23 @@ use Woo3pdHelpscout\Api\Sendgrid;
 				</td>
 			</tr>
 
-			<!-- Helpscout API settings -->
+			<!-- Shared Helpscout API settings -->
 
 			<tr>
 				<th scope="row"><label for="hs_client_id"><?php esc_html_e( 'Helpscout App ID', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
-					<input type="text" id="hs_client_id" class="regular-text" name="woo3pd_helpscout[helpscout][client_id]" value="<?php echo esc_attr( $hs_client_id ); ?>" />
+					<input type="text" id="hs_client_id" class="regular-text" name="woo3pd_helpscout[client_id]" value="<?php echo esc_attr( $hs_client_id ); ?>" />
 				</td>
 			</tr>
 			<tr>
 				<th scope="row"><label for="hs_client_secret"><?php esc_html_e( 'Helpscout App Secret', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
-					<input type="password" id="hs_client_secret" class="regular-text" name="woo3pd_helpscout[helpscout][client_secret]" value="<?php echo esc_attr( $hs_client_secret ); ?>" />
+					<input type="password" id="hs_client_secret" class="regular-text" name="woo3pd_helpscout[client_secret]" value="<?php echo esc_attr( $hs_client_secret ); ?>" />
 				</td>
 			</tr>
+
+			<!-- Helpscout webhook settings -->
+
 			<tr class="toggle-api show-if-helpscout" <?php echo 'helpscout' !== $current_api ? 'style="display:none"' : ''; ?> >
 				<th scope="row"><label for="hs_secret_key"><?php esc_html_e( 'Helpscout Webhook Secret Key', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
@@ -87,7 +89,7 @@ use Woo3pdHelpscout\Api\Sendgrid;
 			<tr class="toggle-api show-if-sendgrid" <?php echo 'helpscout' === $current_api ? 'style="display:none"' : ''; ?> >
 				<th scope="row"><label for="hs_mailbox_id"><?php esc_html_e( 'Helpscout Mailbox Id', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
-					<input type="text" id="hs_mailbox_id" name="woo3pd_helpscout[helpscout][mailbox_id]" value="<?php echo esc_attr( $hs_mailbox_id ); ?>" />
+					<input type="text" id="hs_mailbox_id" name="woo3pd_helpscout[mailbox_id]" value="<?php echo esc_attr( $hs_mailbox_id ); ?>" />
 				</td>
 			</tr>
 
@@ -98,9 +100,9 @@ use Woo3pdHelpscout\Api\Sendgrid;
 			<!-- SendGrid API settings -->
 
 			<tr class="toggle-api show-if-sendgrid" <?php echo 'sendgrid' !== $current_api ? 'style="display:none"' : ''; ?> >
-				<th scope="row"><label for="sendgrid_secret_key"><?php esc_html_e( 'SendGrid Webhook Secret Key', 'woo3pdhelpscout' ); ?></label></th>
+				<th scope="row"><label for="sendgrid_api_key"><?php esc_html_e( 'SendGrid API Key', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
-					<input type="password" id="sendgrid_secret_key" class="regular-text" name="woo3pd_helpscout[sendgrid][secret_key]" value="<?php echo esc_attr( $sg_secret_key ); ?>" />
+					<input type="password" id="sendgrid_api_key" class="regular-text" name="woo3pd_helpscout[sendgrid][api_key]" value="<?php echo esc_attr( $sg_api_key ); ?>" />
 				</td>
 			</tr>
 
