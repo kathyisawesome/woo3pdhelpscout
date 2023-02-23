@@ -57,8 +57,7 @@ class Sendgrid extends AbstractAPI {
 	 */
 	public function handle_webhook() {
 		$payload = $this->get_payload();
-		$this->new_conversation($payload);
-		//$this->auto_refresh_token( [ $this, 'new_conversation' ], $payload );
+		$this->auto_refresh_token( [ $this, 'new_conversation' ], $payload );
 	}
 
 	/**
