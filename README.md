@@ -34,7 +34,7 @@ Inbound Parse means that SendGrid will be the MX record for all emails to a subd
 2. Add SendGrid's MX record to your DNS on a subdomain. 
 3. Add the Inbound Parse rule in your SendGrid settings. See SendGrid's [Inbound Parse documentation](https://sendgrid.com/docs/for-developers/parsing-email/setting-up-the-inbound-parse-webhook/).
 4. Set the rule's delivery webhook to `http://yourwebsite.com/?woo3pd-api=sendgrid`
-5. Get your Mailbox ID from HelpScout. Go to Manage > Mailboxes and the ID will be in the URL after mailbox: `https://secure.helpscout.net/settings/mailbox/XXXXX/`
+5. Get your Mailbox ID from HelpScout. Go to your Mailbox's settings. Either via Edit Mailbox from your mailbox or via Manage > Mailboxes > Click on your desired mailbox. The ID will be in the URL after mailbox: `https://secure.helpscout.net/settings/mailbox/XXXXX/`
 
 ![plugin settings fields at your website for SendGrid](https://user-images.githubusercontent.com/507025/83977529-56b24e00-a8be-11ea-982b-f1d493b5d92b.png)
 
