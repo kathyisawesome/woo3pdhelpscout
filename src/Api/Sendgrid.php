@@ -49,8 +49,6 @@ class Sendgrid extends AbstractAPI {
 	 * @return  array - the $_POSTed data.
 	 */
 	public function get_payload() {
-
-		return json_decode( file_get_contents( __DIR__ . '/sendgrid-payload.json') );
 		return ! empty ( $_POST ) ? $_POST : [];
 	}
 
@@ -59,7 +57,8 @@ class Sendgrid extends AbstractAPI {
 	 */
 	public function handle_webhook() {
 		$payload = $this->get_payload();
-		$this->auto_refresh_token( [ $this, 'new_conversation' ], $payload );
+		$this->new_conversation($payload);
+		//$this->auto_refresh_token( [ $this, 'new_conversation' ], $payload );
 	}
 
 	/**
