@@ -17,10 +17,12 @@ use Woo3pdHelpscout\Parser\Parse;
 use Woo3pdHelpscout\Exceptions\QuietException;
 
 use HelpScout\Api\Conversations\Conversation;
+use HelpScout\Api\Conversations\Threads\Attachments\AttachmentFactory;
 use HelpScout\Api\Conversations\Threads\NoteThread;
 use HelpScout\Api\Conversations\Threads\CustomerThread;
 use HelpScout\Api\Conversations\CustomField;
 use HelpScout\Api\Customers\Customer;
+use HelpScout\Api\Support\Filesystem;
 use HelpScout\Api\Tags\Tag;
 use HelpScout\Api\Entity\Collection;
 
@@ -49,7 +51,19 @@ class Sendgrid extends AbstractAPI {
 	 * @return  array - the $_POSTed data.
 	 */
 	public function get_payload() {
-		return ! empty ( $_POST ) ? $_POST : [];
+
+	    $payload = [];
+
+        $payload_json = @file_get_contents('php://input');
+        
+        if ( !empty($payload_json ) ) {
+            $payload = json_decode($payload_json, true);
+        } elseif ( ! empty( $_POST ) ) {
+            $payload = $_POST;
+        }
+
+	    return $payload;
+		
 	}
 
 	/**
@@ -138,6 +152,42 @@ class Sendgrid extends AbstractAPI {
 		$customerThread = new CustomerThread();
 		$customerThread->setCustomer( $customer );
 		$customerThread->setText( $ticket_message );
+
+		if ( ! empty( $api_key ) && ! empty( $payload['attachments'] ) && ! empty( $payload['attachment-info'] ) ) {
+
+			$attachmentInfo = json_decode($payload['attachment-info'], true);
+
+			// Add attachments to the thread
+			foreach ($attachmentInfo as $attachment) {
+				$filename = $attachment['filename'];
+				$contentType = $attachment['type'];
+				$contentId = $attachment['content-id'];
+				$url = "https://api.sendgrid.com/v3/mail/attachments/$contentId/content";
+
+				$file = file_get_contents($url, false, stream_context_create([
+					"http" => [
+						"header" => "Authorization: Bearer {$api_key}\r\n"
+					]
+					]));
+
+				if ($file === false) {
+					$error = \error_get_last();
+
+					throw new \Exception( "Error: {$error['message']} in {$error['file']} on line {$error['line']}" );
+
+				} else {
+
+					$attachmentObject = new Attachment();
+					$attachmentObject->setFileName($filename);
+					$attachmentObject->setMimeType($contentType);
+					$attachmentObject->setData($file);
+					$customerThread->addAttachment($attachmentObject);
+
+				}
+			}
+
+		}
+		
 		$threads[] = $customerThread;
 
 		/**
