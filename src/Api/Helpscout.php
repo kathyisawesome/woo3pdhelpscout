@@ -155,7 +155,7 @@ class Helpscout extends AbstractAPI {
 
 		// Add product name if found.
 		if ( ! empty( $ticket_data['product_tag'] ) ) {
-			$tags[] = [ $ticket_data['product_tag'] ];
+			$tags[] = $ticket_data['product_tag'];
 		}
 
 		if ( ! empty( $tags ) ) {
