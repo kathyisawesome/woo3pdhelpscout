@@ -5,9 +5,26 @@
 	"config": {
 		"platform": {
 		  "php": "8.0.23"
+		},
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
+	},
+	"scripts": {
+		"phpcs": [
+			"phpcs . -s -p -n"
+		],
+		"phpcs-pre-commit": [
+		  "phpcs . -s -p -n"
+		],
+		"phpcb": [
+			"phpcbf . "
+		]
 	},
 	"require": {
 		"helpscout/api": "^3.0"
+	},
+	"require-dev": {
+		"woocommerce/woocommerce-sniffs": "^1.0"
 	}
 }
