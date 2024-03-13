@@ -52,18 +52,17 @@ class Sendgrid extends AbstractAPI {
 	 */
 	public function get_payload() {
 
-	    $payload = [];
+		$payload = array();
 
-        $payload_json = @file_get_contents('php://input');
-        
-        if ( !empty($payload_json ) ) {
-            $payload = json_decode($payload_json, true);
-        } elseif ( ! empty( $_POST ) ) {
-            $payload = $_POST;
-        }
-
-	    return $payload;
+		$payload_json = @file_get_contents('php://input');
 		
+		if ( !empty($payload_json ) ) {
+			$payload = json_decode($payload_json, true);
+		} elseif ( ! empty( $_POST ) ) {
+			$payload = $_POST;
+		}
+
+		return $payload;
 	}
 
 	/**
@@ -71,7 +70,7 @@ class Sendgrid extends AbstractAPI {
 	 */
 	public function handle_webhook() {
 		$payload = $this->get_payload();
-		$this->auto_refresh_token( [ $this, 'new_conversation' ], $payload );
+		$this->auto_refresh_token( array( $this, 'new_conversation' ), $payload );
 	}
 
 	/**
@@ -135,7 +134,7 @@ class Sendgrid extends AbstractAPI {
 		/**
 		 * Threads
 		 */
-		$threads = [];
+		$threads = array();
 
 		// System status as note.
 		if ( ! empty( $ticket_data['status'] ) ) {
@@ -159,16 +158,16 @@ class Sendgrid extends AbstractAPI {
 
 			// Add attachments to the thread
 			foreach ($attachmentInfo as $attachment) {
-				$filename = $attachment['filename'];
+				$filename    = $attachment['filename'];
 				$contentType = $attachment['type'];
-				$contentId = $attachment['content-id'];
-				$url = "https://api.sendgrid.com/v3/mail/attachments/$contentId/content";
+				$contentId   = $attachment['content-id'];
+				$url         = "https://api.sendgrid.com/v3/mail/attachments/$contentId/content";
 
-				$file = file_get_contents($url, false, stream_context_create([
-					"http" => [
-						"header" => "Authorization: Bearer {$api_key}\r\n"
-					]
-					]));
+				$file = file_get_contents($url, false, stream_context_create(array(
+					'http' => array(
+						'header' => "Authorization: Bearer {$api_key}\r\n",
+					),
+					)));
 
 				if ($file === false) {
 					$error = \error_get_last();
@@ -193,15 +192,18 @@ class Sendgrid extends AbstractAPI {
 		/**
 		 * Tags
 		 */
-		$tags = [];
-		if ( ! empty( $ticket_data['product_tag'] ) ) {
-			$apiTag = new Tag();
-			$apiTag->setName( 'api' ); // Always set an api tag to identify something we parsed.
+		$tags = array();
 
+		$apiTag = new Tag();
+		$apiTag->setName( 'api' ); // Always set an api tag to identify something we parsed.
+
+		$tags[] = $apiTag;
+
+		if ( ! empty( $ticket_data['product_tag'] ) ) {
 			$productTag = new Tag();
 			$productTag->setName( $ticket_data['product_tag'] );
 			
-			$tags = [ $apiTag, $productTag ];
+			$tags[] = $productTag;
 		}
 
 		/**
@@ -220,20 +222,18 @@ class Sendgrid extends AbstractAPI {
 		$conversation->setCustomer( $customer );
 
 		if ( ! empty( $threads ) ) {
-		    $conversation->setThreads( new Collection( $threads ) );
+			$conversation->setThreads( new Collection( $threads ) );
 		}
 		
 		if ( ! empty( $tags ) ) {
-		    $conversation->setTags( new Collection( $tags ) );
+			$conversation->setTags( new Collection( $tags ) );
 		}
 		
 		if ( ! empty( $customFields ) ) {
-		    $conversation->setCustomFields( new Collection( $customFields ) );
+			$conversation->setCustomFields( new Collection( $customFields ) );
 		}
 
 		// Create the new conversation.
 		$new_conversation_id = $client->conversations()->create( $conversation );
-
 	}
-
 }

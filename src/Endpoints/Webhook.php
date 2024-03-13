@@ -28,7 +28,7 @@ class Webhook extends AbstractApp {
 	 */
 	public function setup_hooks() {
 		$provider = App::instance()->get_api();
-		add_action( 'woo3pd_api_' . $provider, array( $this, 'process_webhook' ) );	
+		add_action( 'woo3pd_api_' . $provider, array( $this, 'process_webhook' ) ); 
 	}
 
 	/**
@@ -54,7 +54,9 @@ class Webhook extends AbstractApp {
 
 			// Email notification of failure.
 			$to       = get_bloginfo( 'admin_email' );
+			// translators: %s is the site name.
 			$subject  = sprintf( esc_html__( 'Webhook failure notification for %s', 'woo3pdhelpscout' ), bloginfo( 'name' ) );
+			// translators: %s is the error message.
 			$message  = sprintf( esc_html__( 'Webhook failured with error code: %s', 'woo3pdhelpscout' ), $e->getMessage() );
 			$message .= '<pre> ' . json_encode( $_POST ) . '</pre>';
 
@@ -65,7 +67,5 @@ class Webhook extends AbstractApp {
 			http_response_code( 200 );
 
 		}
-
 	}
-
 }

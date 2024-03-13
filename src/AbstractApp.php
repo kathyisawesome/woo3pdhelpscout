@@ -48,14 +48,14 @@ abstract class AbstractApp {
 	 *
 	 * @var array the DB settings for plugin.
 	 */
-	protected $settings = [];
+	protected $settings = array();
 
 	/**
 	 * Plugin default settings.
 	 *
 	 * @var array the DB settings for plugin.
 	 */
-	protected $default_settings = [];
+	protected $default_settings = array();
 
 	/**
 	 * Plugin directory URL - filtered.
@@ -156,7 +156,7 @@ abstract class AbstractApp {
 	/*
 	-----------------------------------------------------------------------------------*/
 	/*
-	 Helper Functions */
+	Helper Functions */
 	/*-----------------------------------------------------------------------------------*/
 
 	/**
@@ -180,7 +180,6 @@ abstract class AbstractApp {
 		}
 
 		return $this->settings;
-
 	}
 
 	/**
@@ -203,14 +202,13 @@ abstract class AbstractApp {
 		$result = false;
 
 		if ( ! empty( $settings ) && is_array( $settings ) ) {
-			$new_settings   = array_intersect_key( $settings, $this->get_default_settings() );
+			$new_settings = array_intersect_key( $settings, $this->get_default_settings() );
 			// $new_settings    = array_map( 'sanitize_text_field', $new_settings );
 			$this->settings = array_merge( $this->get_settings(), $new_settings );
 			$result         = update_option( static::OPTION, $this->settings );
 		}
 
 		return $result;
-
 	}
 
 	/**

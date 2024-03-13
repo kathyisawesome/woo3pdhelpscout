@@ -28,13 +28,12 @@ class Controller extends AbstractApp {
 		add_action( 'init', array( $this, 'add_endpoint' ) );
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		add_action( 'parse_request', array( $this, 'handle_api_requests' ) );
-
 	}
 
 	/*
 	-----------------------------------------------------------------------------------*/
 	/*
-	 API */
+	API */
 	/*-----------------------------------------------------------------------------------*/
 
 	/**
@@ -91,5 +90,4 @@ class Controller extends AbstractApp {
 			die( '-1' );
 		}
 	}
-
 } // End class.

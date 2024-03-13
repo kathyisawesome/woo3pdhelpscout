@@ -35,5 +35,4 @@ class Install {
 		flush_rewrite_rules();
 		wp_clear_scheduled_hook( 'woo3pdhelpscout_gmail_api_watch' );
 	}
-
 } // End class.

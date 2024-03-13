@@ -32,5 +32,5 @@ require_once dirname( __DIR__ ) . '/vendor/autoload.php';
  *       We build it here, assuming that it's one folder up and the name is known.
  */
 App::instance()
-   ->configure( dirname( __DIR__ ) . '/woo3pd-helpscout.php' )
-   ->setup_hooks();
+	->configure( dirname( __DIR__ ) . '/woo3pd-helpscout.php' )
+	->setup_hooks();

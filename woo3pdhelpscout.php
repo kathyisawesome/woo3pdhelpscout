@@ -42,4 +42,4 @@ if ( ! function_exists( 'phpversion' ) || version_compare( phpversion(), '7.1', 
 
 // Continue with the 53+ loader.
 /* @noinspection dirnameCallOnFileConstantInspection */
-require_once dirname( __FILE__ ) . '/src/loader.php';
+require_once __DIR__ . '/src/loader.php';

@@ -30,5 +30,4 @@ class Notices {
 		</div>
 		<?php
 	}
-
 } // End class.

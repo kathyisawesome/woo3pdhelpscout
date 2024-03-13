@@ -34,13 +34,12 @@ class Controller extends AbstractApp {
 
 		// Add Donate link to plugin.
 		add_filter( 'plugin_row_meta', array( $this, 'add_meta_links' ), 10, 2 );
-
 	}
 
 	/*
 	-----------------------------------------------------------------------------------*/
 	/*
-	 Handle fetching and revoking tokens */
+	Handle fetching and revoking tokens */
 	/*-----------------------------------------------------------------------------------*/
 
 	/**
@@ -65,7 +64,7 @@ class Controller extends AbstractApp {
 	/*
 	-----------------------------------------------------------------------------------*/
 	/*
-	 Admin Settings */
+	Admin Settings */
 	/*-----------------------------------------------------------------------------------*/
 
 	/**
@@ -99,7 +98,6 @@ class Controller extends AbstractApp {
 		array_unshift( $links, $plugin_link );
 
 		return $links;
-
 	}
 
 	/**
@@ -167,7 +165,5 @@ class Controller extends AbstractApp {
 		}
 
 		return $clean;
-
 	}
-
 }

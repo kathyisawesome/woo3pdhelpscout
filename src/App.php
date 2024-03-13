@@ -112,7 +112,6 @@ class App extends AbstractApp {
 		if ( is_admin() ) {
 			Admin\Controller::instance()->setup_hooks();
 		}
-
 	}
 
 	/**
@@ -140,5 +139,4 @@ class App extends AbstractApp {
 		$class_name = __NAMESPACE__ . '\\Api\\' . ucfirst( $api );
 		return $class_name::instance();
 	}
-
 } // End class.

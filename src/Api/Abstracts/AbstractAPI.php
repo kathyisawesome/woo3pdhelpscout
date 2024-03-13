@@ -68,14 +68,14 @@ abstract class AbstractAPI extends AbstractApp {
 	 *
 	 * @var array the DB settings for this API.
 	 */
-	protected $extra_settings = [];
+	protected $extra_settings = array();
 
 	/**
 	 * Default settings.
 	 *
 	 * @var array the DB settings for this API.
 	 */
-	protected $default_settings = [];
+	protected $default_settings = array();
 
 	/**
 	 * @var string
@@ -150,7 +150,6 @@ abstract class AbstractAPI extends AbstractApp {
 			),
 			self::AUTHURL,
 		);
-
 	}
 
 	/**
@@ -171,7 +170,6 @@ abstract class AbstractAPI extends AbstractApp {
 			'woo3pd_helpscout_nonce',
 			'woo3pd_helpscout_nonce',
 		);
-
 	}
 
 	/**
@@ -257,13 +255,12 @@ abstract class AbstractAPI extends AbstractApp {
 		} else {
 			return false;
 		}
-
 	}
 
 	/*
 	-----------------------------------------------------------------------------------*/
 	/*
-	 HelpScout Client Functions */
+	HelpScout Client Functions */
 	/*-----------------------------------------------------------------------------------*/
 
 	/**
@@ -291,7 +288,6 @@ abstract class AbstractAPI extends AbstractApp {
 		}
 
 		return $this->client;
-
 	}
 
 
@@ -331,7 +327,7 @@ abstract class AbstractAPI extends AbstractApp {
 				$message  = $error->getMessage() . "\n";
 				$message .= 'logRef: ' . $error->getLogRef() . "\n";
 
-				$errors = $error->getErrors();
+				$errors   = $error->getErrors();
 				$message .= "errors : \n";
 
 				foreach ( $errors as $err ) {
@@ -342,7 +338,6 @@ abstract class AbstractAPI extends AbstractApp {
 
 			}
 		} while ( $retry );
-
 	}
 
 	/**
@@ -357,7 +352,7 @@ abstract class AbstractAPI extends AbstractApp {
 	/*
 	-----------------------------------------------------------------------------------*/
 	/*
-	 HelpScout Custom fields Functions */
+	HelpScout Custom fields Functions */
 	/*-----------------------------------------------------------------------------------*/
 
 	/**
@@ -403,15 +398,15 @@ abstract class AbstractAPI extends AbstractApp {
 	 */
 	protected function get_custom_fields( $mailbox_id, $ticket_data ) {
 
-		$custom_fields = [];
+		$custom_fields = array();
 
 		// If there was no discernable product tag, we probably don't have a new form submission so unlikely to get much out of the custom field info.
 		if ( ! empty( $ticket_data['product_tag'] ) ) {
 
-			$request = (new MailboxRequest)->withFields();
+			$request = ( new MailboxRequest() )->withFields();
 
-			$mailbox         = $this->get_client()->mailboxes()->get( intval( $mailbox_id ), $request );
-			$mailbox_fields  = $mailbox->getFields();
+			$mailbox        = $this->get_client()->mailboxes()->get( intval( $mailbox_id ), $request );
+			$mailbox_fields = $mailbox->getFields();
 
 			if ( ! empty( $mailbox_fields ) && ! empty( $this->get_translated_custom_fields() ) ) {
 
@@ -436,7 +431,7 @@ abstract class AbstractAPI extends AbstractApp {
 	/*
 	-----------------------------------------------------------------------------------*/
 	/*
-	 Settings Functions */
+	Settings Functions */
 	/*-----------------------------------------------------------------------------------*/
 
 	/**
@@ -462,7 +457,6 @@ abstract class AbstractAPI extends AbstractApp {
 		}
 
 		return $this->settings;
-
 	}
 
 	/**
@@ -489,8 +483,5 @@ abstract class AbstractAPI extends AbstractApp {
 			// $new_settings    = array_map( 'sanitize_text_field', $new_settings );
 			App::instance()->set_settings( array( $this->id => $settings ) );
 		}
-
 	}
-
 }
-

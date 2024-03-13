@@ -108,7 +108,6 @@ class Parse extends AbstractAPI {
 		}
 
 		return $ticket_data;
-
 	}
 
 	/**
@@ -127,7 +126,7 @@ class Parse extends AbstractAPI {
 	/*
 	-----------------------------------------------------------------------------------*/
 	/*
-	 Formatting Functions */
+	Formatting Functions */
 	/*-----------------------------------------------------------------------------------*/
 
 
@@ -142,13 +141,13 @@ class Parse extends AbstractAPI {
 	 *     @type string $first_name First name
 	 *     @type string $last_name  Optional - Last Name if the full name can be split into 2 sections.
 	 *     @type string $email Just the email part.
-	 * 	   @type string $full Combined name plus email, ex: Diana Prince <dprince@amazonia.net>
+	 *     @type string $full Combined name plus email, ex: Diana Prince <dprince@amazonia.net>
 	 * }
 	 */
-	public function parseEmailAddress($raw) {
+	public function parseEmailAddress( $raw ) {
 		$full_name = '';
-		$email = trim($raw, " '\"");
-		if (preg_match("/^(.*)<(.*)>.*$/", $raw, $matches)) {
+		$email     = trim($raw, " '\"");
+		if (preg_match('/^(.*)<(.*)>.*$/', $raw, $matches)) {
 			array_shift($matches);
 			$full_name = trim($matches[0], " '\"");
 			$email     = trim($matches[1], " '\"");
@@ -158,7 +157,7 @@ class Parse extends AbstractAPI {
 			$this->parseNames($full_name),
 			array( 
 				'email'      => $email,
-				'full'       => $full_name . " <" . $email . ">",
+				'full'       => $full_name . ' <' . $email . '>',
 			),
 		); 
 	}
@@ -168,10 +167,11 @@ class Parse extends AbstractAPI {
 	 *
 	 * @param  string $raw - Multiple email addresses.
 	 */
-	public function parseEmailAddresses($raw) {
+	public function parseEmailAddresses( $raw ) {
 		$arr = array();
-		foreach(explode(",", $raw) as $email)
+		foreach (explode(',', $raw) as $email) {
 			$arr[] = $this->parseEmailAddress($email);
+		}
 		return $arr;
 	} 
 
@@ -187,17 +187,16 @@ class Parse extends AbstractAPI {
 	 *     @type string $last  Optional - Last Name if the full name can be split into multiple sections.
 	 * }
 	 */
-	public function parseNames($raw) {
+	public function parseNames( $raw ) {
 
 		// Guess at first/last names without losing any pieces.
 		$names = explode( ' ', $raw );
 		$first = ! empty( $names ) ? array_shift( $names ): $raw; // We take a single split as first name.
-		$last  = 1 < sizeof( $names ) ? implode( ' ', $names ) : ''; // And everything else is the last name. 
+		$last  = 1 < count( $names ) ? implode( ' ', $names ) : ''; // And everything else is the last name. 
 
 		return array(
 			'first' => $first,
 			'last'  => $last,
 		); 
 	}
-
 }

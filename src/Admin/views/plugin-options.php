@@ -21,8 +21,8 @@ use Woo3pdHelpscout\Api\Sendgrid;
 			$hs_secret_key    = Helpscout::instance()->get_setting( 'secret_key' );
 			$sg_api_key       = Sendgrid::instance()->get_setting( 'api_key' );
 
-			$debug            = App::instance()->get_setting( 'debug' );
-			$delete           = App::instance()->get_setting( 'delete' );
+			$debug  = App::instance()->get_setting( 'debug' );
+			$delete = App::instance()->get_setting( 'delete' );
 
 		?>
 

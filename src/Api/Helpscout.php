@@ -26,6 +26,9 @@ use HelpScout\Api\Tags\Tag;
 
 /**
  * HelpscoutApi class.
+ * 
+ * @since 1.0.0
+ * @version 1.0.2
  */
 class Helpscout extends AbstractAPI {
 
@@ -51,7 +54,7 @@ class Helpscout extends AbstractAPI {
 		sleep( 10 );
 
 		$webhook = $this->get_payload();
-		$this->auto_refresh_token( [ $this, 'update_conversation' ], $webhook );
+		$this->auto_refresh_token( array( $this, 'update_conversation' ), $webhook );
 	}
 
 	/**
@@ -79,7 +82,6 @@ class Helpscout extends AbstractAPI {
 		}
 
 		return $webhook;
-
 	}
 
 	/**
@@ -95,7 +97,7 @@ class Helpscout extends AbstractAPI {
 		// Get conversation info from Helpscout Webhooks.
 		$conversation    = $webhook->getConversation();
 		$conversation_id = $conversation->getId();
-		$mailbox_id      = $conversation->getMailboxId();	
+		$mailbox_id      = $conversation->getMailboxId();   
 		$customer        = $conversation->getCustomer();
 		$payload         = $webhook->getDataObject();
 		
@@ -108,11 +110,11 @@ class Helpscout extends AbstractAPI {
 		// Get the original HTML source.
 		try {
 			$source = $client->threads()->getSource( $conversation_id, $thread_id );
-			$html = $source->getOriginal();
+			$html   = $source->getOriginal();
 		} catch ( \GuzzleHttp\Exception\ClientException $e ) {
-		    if ( 404 === $e->getResponse()->getStatusCode() ) {
-		    	  throw new QuietException( 'This is not a *new* ticket submission.' );
-		    }
+			if ( 404 === $e->getResponse()->getStatusCode() ) {
+					throw new QuietException( 'This is not a *new* ticket submission.' );
+			}
 		}
 
 		if ( ! $html ) {
@@ -127,31 +129,21 @@ class Helpscout extends AbstractAPI {
 
 		// System status as note.
 		if ( ! empty( $ticket_data['status'] ) ) {
-		
 			$noteThread = new NoteThread();
 			$noteThread->setText( '<pre>' . $ticket_data['status'] . '</pre>' );
 
 			$client->threads()->create( $conversation_id, $noteThread );
-
 		}
 
-		// Customer question to separate thread.
+		// Reduce initial message to customer question.
 		if ( ! empty( $ticket_data['description'] ) ) {
-
-			$customerThread = new CustomerThread();
-
-			// I think the customer is wrong here
-			$customerThread->setCustomer( $customer );
-			$customerThread->setText( $ticket_data['description'] );
-
-			$client->threads()->create( $conversation_id, $customerThread );
-
+			$client->threads()->updateText( $conversation_id, $thread_id, $ticket_data['description'] );
 		}
 
 		/**
 		 * Tags
 		 */
-		$tags = [ 'api' ]; // Always set an api tag to identify something we parsed.
+		$tags = array( 'api' ); // Always set an api tag to identify something we parsed.
 
 		// Add product name if found.
 		if ( ! empty( $ticket_data['product_tag'] ) ) {
@@ -160,7 +152,6 @@ class Helpscout extends AbstractAPI {
 
 		if ( ! empty( $tags ) ) {
 			$client->conversations()->updateTags( $conversation_id, $tags );
-
 		}
 
 		/**
@@ -171,22 +162,5 @@ class Helpscout extends AbstractAPI {
 		if ( ! empty( $customFields ) ) {
 			$client->conversations()->updateCustomFields( $conversation_id, $customFields );
 		}
-
-		/**
-		 * Since we can't remove a thread, reduce orginal thread to a time notice of when it was parsed (only IF successfully parsed).
-		 */
-		if ( ! empty( $ticket_data['status'] ) && ! empty( $ticket_data['description'] ) ) {
-			$updatedText = sprintf(
-				// Translators: %s is the date the webhook was processed.
-				esc_html_x( 'Processed by webhook on %1$s at %2$s', 'Date and time', 'woo3pdhelpscout' ),
-				current_time( get_option( 'date_format' ) ),
-				current_time( get_option( 'time_format' ) ),
-			);
-
-			$client->threads()->updateText( $conversation_id, $thread_id, $updatedText );
-
-		}
-
 	}
-
 }
