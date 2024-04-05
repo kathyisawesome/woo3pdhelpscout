@@ -3,7 +3,7 @@
  * Plugin Name: Woo3pd Helpscout Integration
  * Plugin URI: http://www.kathyisawesome.com/
  * Description: Parse WooCommerce.com support emails into HelpScout conversations
- * Version: 1.0.1
+ * Version: 1.1.0
  * Author: Kathy Darling
  * Author URI: http://www.kathyisawesome.com
  * License: GPL3
@@ -12,7 +12,7 @@
  * Requires at least: 6.0.0
  * Requires PHP: 8.0
  * 
- * Copyright 2020  Kathy Darling  (email: kathy@kathyisawesome.com)
+ * Copyright 2024  Kathy Darling
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2, as
