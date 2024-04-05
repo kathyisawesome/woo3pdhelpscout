@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // PHP version check.
-if ( ! function_exists( 'phpversion' ) || version_compare( phpversion(), '7.1', '<' ) ) {
+if ( ! function_exists( 'phpversion' ) || version_compare( phpversion(), '8.0', '<' ) ) {
 	require_once 'src/Admin/Notices.php';
 	add_action( 'admin_notices', array( '\Woo3pdHelpscout\Admin\Notices', 'php_failure_notice' ) );
 	return false;
