@@ -141,17 +141,6 @@ abstract class AbstractApp {
 		}
 	}
 
-	/**
-	 * Access to the lazy-loaded instance.
-	 *
-	 * @return AbstractApp
-	 */
-	public static function instance() {
-		static $o;
-
-		return $o ? $o : $o = new static();
-	}
-
 
 	/*
 	-----------------------------------------------------------------------------------*/

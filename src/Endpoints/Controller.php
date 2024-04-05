@@ -7,17 +7,18 @@
 namespace Woo3pdHelpscout\Endpoints;
 
 use Woo3pdHelpscout\App;
+use Woo3pdHelpscout\Singleton;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Woo3pdHelpscout\AbstractApp;
-
 /**
  * Endpoints main class.
  */
-class Controller extends AbstractApp {
+class Controller {
+
+	use Singleton;
 
 	/**
 	 * Attach hooks and filters.

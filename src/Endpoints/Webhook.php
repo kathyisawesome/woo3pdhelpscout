@@ -15,13 +15,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use HelpScout\Api\Webhooks\IncomingWebhook;
 use Woo3pdHelpscout\App;
-use Woo3pdHelpscout\AbstractApp;
+use Woo3pdHelpscout\Singleton;
 use Woo3pdHelpscout\Exceptions\QuietException;
 
 /**
  * Webhook class.
  */
-class Webhook extends AbstractApp {
+class Webhook {
+
+	use Singleton;
 
 	/**
 	 * constructor.

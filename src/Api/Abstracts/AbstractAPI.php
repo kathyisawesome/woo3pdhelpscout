@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Woo3pdHelpscout\App;
-use Woo3pdHelpscout\AbstractApp;
+use Woo3pdHelpscout\Singleton;
 use HelpScout\Api\ApiClientFactory;
 use HelpScout\Api\Mailboxes\MailboxRequest;
 use HelpScout\Api\Conversations\CustomField;
@@ -19,7 +19,9 @@ use HelpScout\Api\Conversations\CustomField;
 /**
  * API class.
  */
-abstract class AbstractAPI extends AbstractApp {
+abstract class AbstractAPI {
+
+	use Singleton;
 
 	/**
 	 * @const string

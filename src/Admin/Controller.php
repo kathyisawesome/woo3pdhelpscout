@@ -11,12 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Woo3pdHelpscout\App;
-use Woo3pdHelpscout\AbstractApp;
+use Woo3pdHelpscout\Singleton;
 
 /**
  * Controller class.
  */
-class Controller extends AbstractApp {
+class Controller {
+
+	use Singleton;
 
 	public function setup_hooks() {
 
