@@ -13,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use HelpScout\Api\Webhooks\IncomingWebhook;
 use Woo3pdHelpscout\App;
 use Woo3pdHelpscout\Singleton;
 use Woo3pdHelpscout\Exceptions\QuietException;

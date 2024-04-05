@@ -11,8 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Woo3pdHelpscout\Api;
-
 class App extends AbstractApp {
 
 	use Singleton;
