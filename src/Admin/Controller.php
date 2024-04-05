@@ -52,13 +52,13 @@ class Controller {
 
 		// The token auth flow sends back the nonce as the state parameter.
 		if ( isset( $_GET['code'] ) && isset( $_GET['state'] ) && wp_verify_nonce( wp_unslash( $_GET['state'] ), 'woo3pd_helpscout_nonce' ) ) {
-			App:instance()->get_api_instance()->swap_for_tokens( wp_unslash( $_GET['code'] ) );
+			$api->swap_for_tokens( wp_unslash( $_GET['code'] ) );
 			wp_safe_redirect( remove_query_arg( array( 'state', 'code', 'scope' ) ) );
 		}
 
 		// Revoke a token.
 		if ( isset( $_GET['revoke'] ) && isset( $_GET['woo3pd_helpscout_nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['woo3pd_helpscout_nonce'] ), 'woo3pd_helpscout_nonce' ) ) {
-			App::instance()->get_api_instance()->revoke_tokens();
+			$api->revoke_tokens();
 			wp_safe_redirect( remove_query_arg( array( 'woo3pd_helpscout_nonce', 'code', 'revoke' ) ) );
 		}
 	}
