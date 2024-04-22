@@ -11,12 +11,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Woo3pdHelpscout\Api\Abstracts\AbstractAPI;
+use Woo3pdHelpscout\Singleton;
 
 /**
  * Parsing class.
+ * 
+ * @since 1.0.0
+ * @version 1.1.1
  */
-class Parse extends AbstractAPI {
+class Parse {
+
+	use Singleton;
 
 	/**
 	 * Parse email into data.
