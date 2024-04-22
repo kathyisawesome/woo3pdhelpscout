@@ -18,6 +18,9 @@ use HelpScout\Api\Conversations\CustomField;
 
 /**
  * API class.
+ * 
+ * @since 1.0.0
+ * @version 1.1.1
  */
 abstract class AbstractAPI {
 
@@ -66,6 +69,13 @@ abstract class AbstractAPI {
 	);
 
 	/**
+	 * Combined API-specific settings.
+	 *
+	 * @var array the settings for this API.
+	 */
+	protected $settings = array();
+
+	/**
 	 * Extra API-specific settings.
 	 *
 	 * @var array the DB settings for this API.
@@ -75,7 +85,7 @@ abstract class AbstractAPI {
 	/**
 	 * Default settings.
 	 *
-	 * @var array the DB settings for this API.
+	 * @var array the default settings for this API.
 	 */
 	protected $default_settings = array();
 
