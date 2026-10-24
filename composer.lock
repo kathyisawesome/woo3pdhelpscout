@@ -4,8 +4,65 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80a721daaa896f29d95d273fbf2b9801",
+    "content-hash": "444c686d1380b6a75e5eb3d8499842a0",
     "packages": [
+        {
+            "name": "afragen/git-updater-lite",
+            "version": "3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/afragen/git-updater-lite.git",
+                "reference": "91d3f39b9a7bf04ee8c17569611ac1bc68ce6e21"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/afragen/git-updater-lite/zipball/91d3f39b9a7bf04ee8c17569611ac1bc68ce6e21",
+                "reference": "91d3f39b9a7bf04ee8c17569611ac1bc68ce6e21",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "wp-coding-standards/wpcs": "^3",
+                "yoast/phpunit-polyfills": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Lite.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andy Fragen",
+                    "email": "andy@thefragens.com",
+                    "homepage": "https://github.com/afragen/git-updater-lite",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple class to integrate with Git Updater for standalone plugin/theme updates.",
+            "keywords": [
+                "package",
+                "updater",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/afragen/git-updater-lite/issues",
+                "source": "https://github.com/afragen/git-updater-lite/tree/3.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/afragen",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-02T22:45:48+00:00"
+        },
         {
             "name": "guzzlehttp/guzzle",
             "version": "7.16.0",

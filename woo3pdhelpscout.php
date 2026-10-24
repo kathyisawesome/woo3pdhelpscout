@@ -9,8 +9,10 @@
  * License: GPL3
  * Text Domain: woo3pdhelpscout
  *
- * Requires at least: 6.0.0
+ * Requires at least: 6.6
  * Requires PHP: 8.0
+ *
+ * Update URI: https://www.backcourt.io
  * 
  * Copyright 2024  Kathy Darling
  *
@@ -40,6 +42,14 @@ if ( ! function_exists( 'phpversion' ) || version_compare( phpversion(), '8.0', 
 	return false;
 }
 
-// Continue with the 53+ loader.
+/**
+ * Add Git Updater Lite
+ */
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+	( new Fragen\Git_Updater\Lite( __FILE__ ) )->run();
+}
+
+// Continue with the loader.
 /* @noinspection dirnameCallOnFileConstantInspection */
 require_once __DIR__ . '/src/loader.php';
