@@ -20,7 +20,7 @@ module.exports = function(grunt) {
 				src: [
 				'**',
 				'!node_modules/**',
-				'!vendor/**',
+				'!vendor/bin/**',
 				'!bin/**',
 				'!composer.json',
 				'!composer.lock',
@@ -65,36 +65,6 @@ module.exports = function(grunt) {
 				cwd: 'build/',
 				src: ['**/*'],
 				dest: '/<%= pkg.name %>'
-			}
-		},
-
-		// # Internationalization
-
-		// Add text domain
-		addtextdomain: {
-			options: {
-				textdomain: '<%= pkg.name %>'    // Project text domain.
-			},
-			target: {
-				files: {
-					src: ['*.php', '**/*.php', '**/**/*.php', '!node_modules/**', '!deploy/**', '!vendor/**', '!vendor-prefixed/**']
-				}
-			}
-		},
-
-		// Generate .pot file
-		makepot: {
-			target: {
-				options: {
-					domainPath: '/languages', // Where to save the POT file.
-					exclude: ['deploy','build','node_modules','vendor','vendor-prefixed'], // List of files or directories to ignore.
-					mainFile: '<%= pkg.name %>.php', // Main project file.
-					potFilename: '<%= pkg.name %>.pot', // Name of the POT file.
-					type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).
-					potHeaders: {
-						'Report-Msgid-Bugs-To': '<%= pkg.bugs.issues %>'
-					}
-				}
 			}
 		},
 
@@ -148,7 +118,7 @@ module.exports = function(grunt) {
         ]
     );
 
-	grunt.registerTask( 'build', [ 'replace', 'addtextdomain', 'makepot' ] );
+	grunt.registerTask( 'build', [ 'replace' ] );
 	grunt.registerTask( 'release', [ 'build', 'zip', 'clean' ] );
 
 };

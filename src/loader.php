@@ -21,23 +21,9 @@ if (
 	return;
 }
 
-// Autoload the plugin's own classes. Third-party packages are namespace-prefixed
+// The autoloader for the plugin's own classes. Third-party packages are namespace-prefixed
 // by Strauss into /vendor-prefixed and loaded in the main plugin file.
-spl_autoload_register(
-	function ( $class_name ) {
-		$prefix = __NAMESPACE__ . '\\';
-
-		if ( 0 !== strpos( $class_name, $prefix ) ) {
-			return;
-		}
-
-		$file = __DIR__ . '/' . str_replace( '\\', '/', substr( $class_name, strlen( $prefix ) ) ) . '.php';
-
-		if ( is_file( $file ) ) {
-			require $file;
-		}
-	}
-);
+require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
 /**
  * Initialize the Application.

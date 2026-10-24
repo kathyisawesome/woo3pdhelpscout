@@ -19,12 +19,12 @@
     "grunt-contrib-compress": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-text-replace": "^0.4.0",
-    "grunt-wp-i18n": "~1.0.4",
     "load-grunt-tasks": "~5.1.0"
   },
   "scripts": {
     "build": "composer install && grunt build",
     "dev": "grunt dev",
-    "release": "composer install --no-dev && grunt release"
+    "makepot": "composer makepot",
+    "release": "composer install --no-dev --no-interaction && composer makepot && grunt release && composer install --no-interaction"
   }
 }
