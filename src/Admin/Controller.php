@@ -32,7 +32,7 @@ class Controller {
 		add_action( 'admin_menu', array( $this, 'add_options_page' ) );
 
 		// Add settings link to plugins page.
-		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_action_links' ), 10, 2 );
+		add_filter( 'plugin_action_links_' . App::instance()->plugin_basename, array( $this, 'add_action_links' ), 10, 2 );
 
 		// Add Donate link to plugin.
 		add_filter( 'plugin_row_meta', array( $this, 'add_meta_links' ), 10, 2 );
@@ -109,8 +109,8 @@ class Controller {
 	 * @param string $plugin_file
 	 */
 	public function add_meta_links( $plugin_meta, $plugin_file ) {
-		if ( $plugin_file === plugin_basename( __FILE__ ) ) {
-			$plugin_meta[] = '<a class="dashicons-before dashicons-awards" href="' . self::DONATE_URL . '" target="_blank">' . __( 'Donate', 'woo3pdhelpscout' ) . '</a>';
+		if ( $plugin_file === App::instance()->plugin_basename ) {
+			$plugin_meta[] = '<a class="dashicons-before dashicons-awards" href="' . esc_url( App::DONATE_URL ) . '" target="_blank">' . __( 'Donate', 'woo3pdhelpscout' ) . '</a>';
 		}
 		return $plugin_meta;
 	}

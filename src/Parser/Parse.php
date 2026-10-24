@@ -195,7 +195,7 @@ class Parse {
 		// Guess at first/last names without losing any pieces.
 		$names = explode( ' ', $raw );
 		$first = ! empty( $names ) ? array_shift( $names ): $raw; // We take a single split as first name.
-		$last  = 1 < count( $names ) ? implode( ' ', $names ) : ''; // And everything else is the last name. 
+		$last  = ! empty( $names ) ? implode( ' ', $names ) : ''; // And everything else is the last name. 
 
 		return array(
 			'first' => $first,

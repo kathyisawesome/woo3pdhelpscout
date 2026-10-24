@@ -17,9 +17,7 @@ class Install {
 	 * Flush rewrite routes.
 	 */
 	public static function install() {
-		require_once dirname( __FILE_ ) . '/src/Endpoints/Controller.php';
-		$endpoints = new \woo3pdHelpscout\Endpoints\Controller();
-		$endpoints->add_endpoint();
+		\Woo3pdHelpscout\Endpoints\Controller::instance()->add_endpoint();
 		flush_rewrite_rules();
 	}
 
@@ -29,7 +27,7 @@ class Install {
 	 */
 	public static function uninstall() {
 		$settings = get_option( 'woo3pd_helpscout' );
-		if ( isset( $settings['delete'] ) && 'yes' === isset( $settings['delete'] ) ) {
+		if ( isset( $settings['delete'] ) && 'yes' === $settings['delete'] ) {
 			delete_option( 'woo3pd_helpscout' );
 		}
 		flush_rewrite_rules();

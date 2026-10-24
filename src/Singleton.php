@@ -10,12 +10,10 @@ namespace Woo3pdHelpscout;
 
 trait Singleton
 {
-    protected static $instance;
+    protected static $instances = array();
     final public static function instance()
     {
-        return isset(static::$instance)
-            ? static::$instance
-            : static::$instance = new static;
+        return static::$instances[ static::class ] ??= new static;
     }
     final public function __construct() {
         $this->init();

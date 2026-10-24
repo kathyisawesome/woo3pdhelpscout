@@ -7,3 +7,4 @@ sftp-config.json
 *.bak
 bookmarks.json
 webhook-payload.json
+sendgrid-payload.json

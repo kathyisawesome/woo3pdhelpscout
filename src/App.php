@@ -99,10 +99,10 @@ class App extends AbstractApp {
 		$this->load_translations();
 
 		// Set-up install action.
-		\register_activation_hook( __FILE__, array( 'Admin\Install', 'install' ) );
+		\register_activation_hook( $this->plugin_file, array( __NAMESPACE__ . '\Admin\Install', 'install' ) );
 
 		// Set-up uninstall action.
-		\register_uninstall_hook( __FILE__, array( 'Admin\Install', 'uninstall' ) );
+		\register_uninstall_hook( $this->plugin_file, array( __NAMESPACE__ . '\Admin\Install', 'uninstall' ) );
 
 		// Launch the endpoint and webhook.
 		Endpoints\Controller::instance()->setup_hooks();

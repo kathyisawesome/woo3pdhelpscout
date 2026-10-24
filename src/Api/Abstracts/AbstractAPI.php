@@ -285,7 +285,7 @@ abstract class AbstractAPI {
 
 			$appId       = App::instance()->get_setting( 'client_id' );
 			$appSecret   = App::instance()->get_setting( 'client_secret' );
-			$accessToken = App::instance()->get_setting( 'access_token' );
+			$accessToken = App::instance()->get_setting( 'token' );
 
 			if ( $appId && $appSecret ) {
 				$this->client = ApiClientFactory::createClient();
@@ -356,9 +356,8 @@ abstract class AbstractAPI {
 	 * Refresh the token.
 	 */
 	public function refresh_token() {
-		$this->get_client()->getAuthenticator()->fetchAccessAndrefresh_token();
-		$accessToken = $this->get_client()->getAuthenticator()->fetchAccessAndrefresh_token()->accessToken();
-		App::instance()->set_settings( array( 'access_token' => $accessToken ) );
+		$accessToken = $this->get_client()->getAuthenticator()->fetchAccessAndRefreshToken()->accessToken();
+		App::instance()->set_settings( array( 'token' => $accessToken ) );
 	}
 
 	/*

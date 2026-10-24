@@ -22,7 +22,7 @@
 		]
 	},
 	"require": {
-		"helpscout/api": "^3.7"
+		"helpscout/api": "^3.10"
 	},
 	"require-dev": {
 		"woocommerce/woocommerce-sniffs": "^1.0"
