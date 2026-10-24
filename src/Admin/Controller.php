@@ -22,9 +22,6 @@ class Controller {
 
 	public function setup_hooks() {
 
-		// Handle auth actions.
-		add_action( 'wp_loaded', array( $this, 'auth_handler' ) );
-
 		// Register settings.
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
@@ -36,31 +33,6 @@ class Controller {
 
 		// Add Donate link to plugin.
 		add_filter( 'plugin_row_meta', array( $this, 'add_meta_links' ), 10, 2 );
-	}
-
-	/*
-	-----------------------------------------------------------------------------------*/
-	/*
-	Handle fetching and revoking tokens */
-	/*-----------------------------------------------------------------------------------*/
-
-	/**
-	 * Handle fetching and revoking tokens for APIs.
-	 */
-	public function auth_handler() {
-		$api = App::instance()->get_api_instance();
-
-		// The token auth flow sends back the nonce as the state parameter.
-		if ( isset( $_GET['code'] ) && isset( $_GET['state'] ) && wp_verify_nonce( wp_unslash( $_GET['state'] ), 'woo3pd_helpscout_nonce' ) ) {
-			$api->swap_for_tokens( wp_unslash( $_GET['code'] ) );
-			wp_safe_redirect( remove_query_arg( array( 'state', 'code', 'scope' ) ) );
-		}
-
-		// Revoke a token.
-		if ( isset( $_GET['revoke'] ) && isset( $_GET['woo3pd_helpscout_nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['woo3pd_helpscout_nonce'] ), 'woo3pd_helpscout_nonce' ) ) {
-			$api->revoke_tokens();
-			wp_safe_redirect( remove_query_arg( array( 'woo3pd_helpscout_nonce', 'code', 'revoke' ) ) );
-		}
 	}
 
 	/*

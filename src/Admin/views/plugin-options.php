@@ -20,6 +20,7 @@ use Woo3pdHelpscout\Api\Sendgrid;
 			$hs_mailbox_id    = App::instance()->get_setting( 'mailbox_id' );
 			$hs_secret_key    = Helpscout::instance()->get_setting( 'secret_key' );
 			$sg_api_key       = Sendgrid::instance()->get_setting( 'api_key' );
+			$sg_secret        = Sendgrid::instance()->get_webhook_secret();
 
 			$debug  = App::instance()->get_setting( 'debug' );
 			$delete = App::instance()->get_setting( 'delete' );
@@ -54,7 +55,7 @@ use Woo3pdHelpscout\Api\Sendgrid;
 					<p><?php esc_html_e( 'Your webhook URL', 'woo3pdhelpscout' ); ?>
 					<?php foreach ( App::instance()->get_apis()  as $api ) : ?>
 						<code class="toggle-api show-if-<?php echo esc_attr( $api ); ?>" <?php echo $api !== $current_api ? 'style="display:none"' : ''; ?>>
-							<?php echo esc_url( add_query_arg( array( 'woo3pd-api' => $api ), site_url() ) ); ?>
+							<?php echo esc_url( App::instance()->get_api_instance( $api )->get_webhook_url() ); ?>
 						</code>
 					<?php endforeach; ?>
 					</p>
@@ -103,6 +104,14 @@ use Woo3pdHelpscout\Api\Sendgrid;
 				<th scope="row"><label for="sendgrid_api_key"><?php esc_html_e( 'SendGrid API Key', 'woo3pdhelpscout' ); ?></label></th>
 				<td>
 					<input type="password" id="sendgrid_api_key" class="regular-text" name="woo3pd_helpscout[sendgrid][api_key]" value="<?php echo esc_attr( $sg_api_key ); ?>" />
+				</td>
+			</tr>
+
+			<tr class="toggle-api show-if-sendgrid" <?php echo 'sendgrid' !== $current_api ? 'style="display:none"' : ''; ?> >
+				<th scope="row"><label for="sendgrid_webhook_secret"><?php esc_html_e( 'SendGrid Webhook Secret', 'woo3pdhelpscout' ); ?></label></th>
+				<td>
+					<input type="text" id="sendgrid_webhook_secret" class="regular-text" name="woo3pd_helpscout[sendgrid][webhook_secret]" value="<?php echo esc_attr( $sg_secret ); ?>" />
+					<p class="description"><?php esc_html_e( 'Included in the webhook URL above. Clear it and save to generate a new one, then update the URL in SendGrid.', 'woo3pdhelpscout' ); ?></p>
 				</td>
 			</tr>
 

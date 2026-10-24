@@ -42,8 +42,49 @@ class Sendgrid extends AbstractAPI {
 	 * @var array additional DB settings for this API.
 	 */
 	protected $extra_settings = array(
-		'api_key'    => '',
+		'api_key'        => '',
+		'webhook_secret' => '',
 	);
+
+	/**
+	 * Get the shared secret SendGrid must send with each webhook request.
+	 * Generates and saves one if none exists yet.
+	 *
+	 * @return string
+	 */
+	public function get_webhook_secret() {
+		$secret = $this->get_setting( 'webhook_secret' );
+
+		if ( ! $secret ) {
+			$secret = wp_generate_password( 32, false );
+			$this->set_settings( array( 'webhook_secret' => $secret ) );
+		}
+
+		return $secret;
+	}
+
+	/**
+	 * Get the webhook URL, including the shared secret.
+	 *
+	 * @return string
+	 */
+	public function get_webhook_url() {
+		return add_query_arg( 'secret', $this->get_webhook_secret(), parent::get_webhook_url() );
+	}
+
+	/**
+	 * Verify the request carries the shared secret.
+	 *
+	 * @throws \Exception
+	 */
+	protected function verify_webhook() {
+		$secret   = $this->get_setting( 'webhook_secret' );
+		$provided = isset( $_GET['secret'] ) ? sanitize_text_field( wp_unslash( $_GET['secret'] ) ) : '';
+
+		if ( ! $secret || ! hash_equals( $secret, $provided ) ) {
+			throw new \Exception( 'Invalid SendGrid webhook secret. Copy the webhook URL from Settings > Woo3pd HelpScout into your SendGrid Inbound Parse settings.' );
+		}
+	}
 
 	/**
 	 * Get the webhook payload.
@@ -69,6 +110,7 @@ class Sendgrid extends AbstractAPI {
 	 * Handle the webhook.
 	 */
 	public function handle_webhook() {
+		$this->verify_webhook();
 		$payload = $this->get_payload();
 		$this->auto_refresh_token( array( $this, 'new_conversation' ), $payload );
 	}

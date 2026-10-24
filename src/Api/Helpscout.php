@@ -69,11 +69,7 @@ class Helpscout extends AbstractAPI {
 
 		} catch ( \HelpScout\Api\Exception\InvalidSignatureException $e ) {
 
-			$message  = 'Invalid Helpscout Webhook Signature' . '</br>';
-			$message .= 'server vars: ' . json_encode( $_SERVER ) . '</br>';
-			$message .= 'payload : ' . json_encode( @file_get_contents('php://input') );
-
-			throw new \Exception( $message );
+			throw new \Exception( 'Invalid Helpscout webhook signature. Check the Webhook Secret Key in Settings > Woo3pd HelpScout.' );
 		}
 
 		return $webhook;

@@ -129,6 +129,15 @@ abstract class AbstractAPI {
 	}
 
 	/**
+	 * Get the URL this API should send webhooks to.
+	 *
+	 * @return string
+	 */
+	public function get_webhook_url() {
+		return add_query_arg( array( App::ENDPOINT => $this->id ), site_url() );
+	}
+
+	/**
 	 * Get the auth URL
 	 *
 	 * @return  string $url
@@ -490,9 +499,11 @@ abstract class AbstractAPI {
 		$result = false;
 
 		if ( ! empty( $settings ) && is_array( $settings ) ) {
-			$new_settings = array_intersect_key( $settings, $this->get_default_settings() );
-			// $new_settings    = array_map( 'sanitize_text_field', $new_settings );
-			App::instance()->set_settings( array( $this->id => $settings ) );
+			$new_settings   = array_intersect_key( $settings, $this->get_default_settings() );
+			$this->settings = array_merge( $this->get_settings(), $new_settings );
+			$result         = App::instance()->set_settings( array( $this->id => $this->settings ) );
 		}
+
+		return $result;
 	}
 }
