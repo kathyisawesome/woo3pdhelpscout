@@ -14,17 +14,17 @@
   },
   "author": "helgatheviking",
   "devDependencies": {
-    "grunt": "~1.6.1",
+    "grunt": "~1.6.3",
     "grunt-contrib-clean": "^2.0.1",
     "grunt-contrib-compress": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-text-replace": "^0.4.0",
-    "grunt-wp-i18n": "~1.0.3",
+    "grunt-wp-i18n": "~1.0.4",
     "load-grunt-tasks": "~5.1.0"
   },
   "scripts": {
     "build": "composer install && grunt build",
     "dev": "grunt dev",
-    "release": "composer update && grunt release"
+    "release": "composer install --no-dev && grunt release"
   }
 }

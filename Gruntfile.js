@@ -20,6 +20,11 @@ module.exports = function(grunt) {
 				src: [
 				'**',
 				'!node_modules/**',
+				'!vendor/**',
+				'!bin/**',
+				'!composer.json',
+				'!composer.lock',
+				'!src/Api/*.json',
 				'!build/**',
 				'!deploy/**',
 				'!svn/**',
@@ -72,7 +77,7 @@ module.exports = function(grunt) {
 			},
 			target: {
 				files: {
-					src: ['*.php', '**/*.php', '**/**/*.php', '!node_modules/**', '!deploy/**']
+					src: ['*.php', '**/*.php', '**/**/*.php', '!node_modules/**', '!deploy/**', '!vendor/**', '!vendor-prefixed/**']
 				}
 			}
 		},
@@ -82,7 +87,7 @@ module.exports = function(grunt) {
 			target: {
 				options: {
 					domainPath: '/languages', // Where to save the POT file.
-					exclude: ['deploy','build','node_modules'], // List of files or directories to ignore.
+					exclude: ['deploy','build','node_modules','vendor','vendor-prefixed'], // List of files or directories to ignore.
 					mainFile: '<%= pkg.name %>.php', // Main project file.
 					potFilename: '<%= pkg.name %>.pot', // Name of the POT file.
 					type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).

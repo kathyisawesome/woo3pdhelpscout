@@ -45,9 +45,9 @@ if ( ! function_exists( 'phpversion' ) || version_compare( phpversion(), '8.0', 
 /**
  * Add Git Updater Lite
  */
-if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-	require_once __DIR__ . '/vendor/autoload.php';
-	( new Fragen\Git_Updater\Lite( __FILE__ ) )->run();
+if ( file_exists( __DIR__ . '/vendor-prefixed/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor-prefixed/autoload.php';
+	( new Woo3pdHelpscout\Vendor\Fragen\Git_Updater\Lite( __FILE__ ) )->run();
 }
 
 // Continue with the loader.

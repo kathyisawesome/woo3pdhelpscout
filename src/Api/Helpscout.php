@@ -16,8 +16,8 @@ use Woo3pdHelpscout\Api\Abstracts\AbstractAPI;
 use Woo3pdHelpscout\Parser\Parse;
 use Woo3pdHelpscout\Exceptions\QuietException;
 
-use HelpScout\Api\Webhooks\IncomingWebhook;
-use HelpScout\Api\Conversations\Threads\NoteThread;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Webhooks\IncomingWebhook;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Conversations\Threads\NoteThread;
 
 /**
  * HelpscoutApi class.
@@ -67,7 +67,7 @@ class Helpscout extends AbstractAPI {
 
 			$webhook = IncomingWebhook::makeFromGlobals( $secretKey );
 
-		} catch ( \HelpScout\Api\Exception\InvalidSignatureException $e ) {
+		} catch ( \Woo3pdHelpscout\Vendor\HelpScout\Api\Exception\InvalidSignatureException $e ) {
 
 			throw new \Exception( 'Invalid Helpscout webhook signature. Check the Webhook Secret Key in Settings > Woo3pd HelpScout.' );
 		}
@@ -78,7 +78,7 @@ class Helpscout extends AbstractAPI {
 	/**
 	 * Update existing conversation.
 	 *
-	 * @param  obj HelpScout\Api\Webhooks\IncomingWebhook $webhook
+	 * @param  obj Woo3pdHelpscout\Vendor\HelpScout\Api\Webhooks\IncomingWebhook $webhook
 	 */
 	public function update_conversation( $webhook ) {
 
@@ -102,7 +102,7 @@ class Helpscout extends AbstractAPI {
 		try {
 			$source = $client->threads()->getSource( $conversation_id, $thread_id );
 			$html   = $source->getOriginal();
-		} catch ( \GuzzleHttp\Exception\ClientException $e ) {
+		} catch ( \Woo3pdHelpscout\Vendor\GuzzleHttp\Exception\ClientException $e ) {
 			if ( 404 === $e->getResponse()->getStatusCode() ) {
 					throw new QuietException( 'This is not a *new* ticket submission.' );
 			}

@@ -8,3 +8,5 @@ sftp-config.json
 bookmarks.json
 webhook-payload.json
 sendgrid-payload.json
+vendor-prefixed/
+bin/strauss.phar

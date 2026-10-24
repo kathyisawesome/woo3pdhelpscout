@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Woo3pdHelpscout\App;
 use Woo3pdHelpscout\Singleton;
-use HelpScout\Api\ApiClientFactory;
-use HelpScout\Api\Mailboxes\MailboxRequest;
-use HelpScout\Api\Conversations\CustomField;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\ApiClientFactory;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Mailboxes\MailboxRequest;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Conversations\CustomField;
 
 /**
  * API class.
@@ -47,7 +47,7 @@ abstract class AbstractAPI {
 	const SCOPE = '';
 
 	/**
-	 * @var obj HelpScout\Api\ApiClient
+	 * @var obj Woo3pdHelpscout\Vendor\HelpScout\Api\ApiClient
 	 */
 	protected $client;
 
@@ -317,7 +317,7 @@ abstract class AbstractAPI {
 	 *
 	 * @param  string $callback - the function/method to reattempt.
 	 * @param  string $param - The parameter to relay to the callback method.
-	 * @throws  \HelpScout\Api\Exception\AuthenticationException $e
+	 * @throws  \Woo3pdHelpscout\Vendor\HelpScout\Api\Exception\AuthenticationException $e
 	 */
 	public function auto_refresh_token( $callback, $param ) {
 
@@ -329,7 +329,7 @@ abstract class AbstractAPI {
 
 				call_user_func( $callback, $param );
 
-			} catch ( \HelpScout\Api\Exception\AuthenticationException $e ) {
+			} catch ( \Woo3pdHelpscout\Vendor\HelpScout\Api\Exception\AuthenticationException $e ) {
 
 				// We've retried this and it's still not working.
 				if ( $retry ) {
@@ -340,7 +340,7 @@ abstract class AbstractAPI {
 					$this->refresh_token();
 					$retry = true;
 				}
-			} catch ( \HelpScout\Api\Exception\ValidationErrorException $e ) {
+			} catch ( \Woo3pdHelpscout\Vendor\HelpScout\Api\Exception\ValidationErrorException $e ) {
 
 				$error = $e->getError();
 

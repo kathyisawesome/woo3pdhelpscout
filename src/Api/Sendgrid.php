@@ -16,15 +16,15 @@ use Woo3pdHelpscout\Api\Abstracts\AbstractAPI;
 use Woo3pdHelpscout\Parser\Parse;
 use Woo3pdHelpscout\Exceptions\QuietException;
 
-use HelpScout\Api\Conversations\Conversation;
-use HelpScout\Api\Conversations\Threads\Attachments\AttachmentFactory;
-use HelpScout\Api\Conversations\Threads\NoteThread;
-use HelpScout\Api\Conversations\Threads\CustomerThread;
-use HelpScout\Api\Conversations\CustomField;
-use HelpScout\Api\Customers\Customer;
-use HelpScout\Api\Support\Filesystem;
-use HelpScout\Api\Tags\Tag;
-use HelpScout\Api\Entity\Collection;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Conversations\Conversation;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Conversations\Threads\Attachments\AttachmentFactory;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Conversations\Threads\NoteThread;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Conversations\Threads\CustomerThread;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Conversations\CustomField;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Customers\Customer;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Support\Filesystem;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Tags\Tag;
+use Woo3pdHelpscout\Vendor\HelpScout\Api\Entity\Collection;
 
 /**
  * HelpscoutApi class.

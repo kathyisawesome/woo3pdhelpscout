@@ -1,31 +1,53 @@
 {
-	"autoload": {
-        "psr-4": {"Woo3pdHelpscout\\": "src/"}
+  "autoload": {
+    "psr-4": {
+      "Woo3pdHelpscout\\": "src/"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "8.2.0"
     },
-	"config": {
-		"platform": {
-		  "php": "8.2.0"
-		},
-		"allow-plugins": {
-			"dealerdirect/phpcodesniffer-composer-installer": true
-		}
-	},
-	"scripts": {
-		"phpcs": [
-			"phpcs . -s -p -n"
-		],
-		"phpcs-pre-commit": [
-		  "phpcs . -s -p -n"
-		],
-		"phpcb": [
-			"phpcbf . "
-		]
-	},
-	"require": {
-		"helpscout/api": "^3.10",
-		"afragen/git-updater-lite": "^3.2"
-	},
-	"require-dev": {
-		"woocommerce/woocommerce-sniffs": "^1.0"
-	}
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "scripts": {
+    "phpcs": [
+      "phpcs . -s -p -n"
+    ],
+    "phpcs-pre-commit": [
+      "phpcs . -s -p -n"
+    ],
+    "phpcb": [
+      "phpcbf . "
+    ],
+    "prefix-namespaces": [
+      "sh -c 'test -f bin/strauss.phar || { mkdir -p bin && curl -fL -o bin/strauss.phar https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar; }'",
+      "@php bin/strauss.phar",
+      "@composer dump-autoload"
+    ],
+    "post-install-cmd": [
+      "@prefix-namespaces"
+    ],
+    "post-update-cmd": [
+      "@prefix-namespaces"
+    ]
+  },
+  "require": {
+    "helpscout/api": "^3.10",
+    "afragen/git-updater-lite": "^3.2"
+  },
+  "require-dev": {
+    "woocommerce/woocommerce-sniffs": "^1.0"
+  },
+  "extra": {
+    "strauss": {
+      "target_directory": "vendor-prefixed",
+      "namespace_prefix": "Woo3pdHelpscout\\Vendor",
+      "classmap_prefix": "Woo3pdHelpscout_Vendor_",
+      "constant_prefix": "WOO3PDHS_",
+      "delete_vendor_packages": true
+    }
+  }
 }
